@@ -435,18 +435,6 @@ class ProductFulfillment(FulfillmentAutomation):
         data = {}
         return data
 
-
-    def activate_template(self, req, template_type):
-
-        # Get the Activation Template by the ID saved in the configuration parameter for a marketplace
-        activation_response = ActivationTemplateResponse(
-            Utils.get_activation_template(configuration=req.asset.configuration, marketplace_id=req.marketplace.id,
-                                          template_type=template_type))
-        if len(activation_response.template_id) == 0:
-            raise SkipRequest(
-                message=Message.Shared.EMPTY_ACTIVATION_TILE.format(req.marketplace.id))
-        return activation_response
-
     def check_order_parameters(self, req: Fulfillment):
         # Validate to ensure the attempt to create subscription in Vendor System does not fail.
         # For Example - If an ordering parameter is configured to provide email, check if email matches regex
