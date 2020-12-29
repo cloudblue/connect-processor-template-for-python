@@ -1,8 +1,8 @@
 class Globals:
 
     # Global Constants
-    PRODUCTS = ['PRD-467-586-156']
-    ACTIVATION_TEMPLATE = 'TL-968-877-904'
+    PRODUCTS = ['PRD-###-###-###']
+    ACTIVATION_TEMPLATE = 'TL-###-###-###'
     ENVIRONMENT = 'preview'
 
 
