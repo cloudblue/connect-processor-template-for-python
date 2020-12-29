@@ -1,28 +1,9 @@
-
 {
-  "apiKey": "ApiKey SU-265-300-494:bec18741a853297bb267b5a4839bd37e72357d89",
-  "apiEndpoint": "https://api.conn.rocks/public/v1/",
-  "logLevel": 3,
-  "timeout": "",
-  "products": [
-    "PRD-467-586-156"
-  ],
-  "service": {
-    "environment": "preview",
-    "partnerConfig": {
-      "MP-78894": {
-        "apiUrl": "https://private-anon-91baad9f4d-vendorexample.apiary-mock.com",
-        "apiKey": "Vendor API key",
-        "productTemplates": {
-          "activationTemplate": "TL-968-877-904",
-          "tierActivationTemplate": "TL-968-877-904"
-        }
-      }
-    },
-    "globalProductTemplates": {
-      "activationTemplate": "TL-001-001-008",
-      "tierActivationTemplate": "TL-0-000-000-000"
-    },
-    "rootPathLog": "./logs"
+  "apiEndpoint": "",
+  "apiKey": "",
+
+  "partnerConfig": {
+    "apiUrl": "https://private-anon-91baad9f4d-vendorexample.apiary-mock.com",
+    "apiKey": "Vendor API key"
   }
 }
