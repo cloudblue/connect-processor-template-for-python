@@ -3,8 +3,6 @@ from connect.models.configuration import Param, Configuration
 from connect.exceptions import SkipRequest, InquireRequest, FailRequest
 from connect.resources.fulfillment import FulfillmentResource
 from connect.config import Config
-from app.class_models.credentials import Credentials
-from app.utils.logger import logger
 from app.utils.message import Message
 from app.utils.globals import Globals
 import json
@@ -17,23 +15,6 @@ class Utils:
     CREATE_ACTION = 'creation'
     CHANGE_ACTION = 'change'
 
-    # Use this method if Vendor API access details will be configured in Connect as Configuration parameters in the Product
-    @staticmethod
-    def get_credentials(marketplace_id, configuration: Configuration, environment) -> Credentials:
-        logger.info('Getting credentials for marketplace {}'.format(marketplace_id))
-        try:
-            config_file = Utils.get_config_file()
-            api_url = config_file['service']['partnerConfig'][marketplace_id]['apiUrl']
-            api_key = config_file['service']['partnerConfig'][marketplace_id]['apiKey']
-            credentials = Credentials(marketplace_id=marketplace_id, configuration=configuration,
-                                      environment=environment, api_url=api_url, api_key=api_key)
-        except SkipRequest as err:
-            raise err
-        except Exception:
-            message = Message.Shared.ERROR_GETTING_CONFIGURATION.format(marketplace_id)
-            raise SkipRequest(message)
-
-        return credentials
 
     @staticmethod
     def get_config_file() -> Dict[str, Any]:
@@ -45,9 +26,9 @@ class Utils:
     def serialize(data, restrict=False):
         """Convert given object to printable structure
         Args:
-            data: Generic object to be converted in string with json structure
-            :param data: data to be converted
-            :param restrict: hide sensitive data
+            request: Generic object to be converted in string with json structure
+            :param data: request to be converted
+            :param restrict: hide sensitive request
         """
         dumped = json.dumps(data, default=lambda o: getattr(o, '__dict__', str(o)), check_circular=False)
         return Utils.drop_restricted_data(json.loads(dumped)) if restrict else json.loads(dumped)
@@ -77,7 +58,6 @@ class Utils:
         template_id = ""
 
         try:
-            logger.info(f"Trying to get '{template_type}' for marketplace {marketplace_id}")
             # Getting the Activation Template provided in configuration parameter of Product in Connect
             if hasattr(configuration.get_param_by_id(template_type), 'value') and not Utils.is_null_or_empty(
                     configuration.get_param_by_id(template_type).value):
@@ -87,7 +67,6 @@ class Utils:
             else:
                 error_message = Message.Shared.NOT_FOUND_TEMPLATE.format(template_type,
                                                                          marketplace_id)
-                logger.error(Globals.SKIP_ACTION + error_message)
                 raise SkipRequest(error_message)
         finally:
             return template_id
@@ -102,7 +81,6 @@ class Utils:
 
     @staticmethod
     def check_previous_active_subscription(filter):
-        logger.debug("Checking if this customer already has a subscription")
         config_file = Utils.get_config_file()
         fulfilment_resource = FulfillmentResource(Config(
             api_url=config_file['apiEndpoint'],

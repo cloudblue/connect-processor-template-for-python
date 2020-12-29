@@ -1,11 +1,16 @@
 class Globals:
 
     # Global Constants
+    PRODUCTS = ['PRD-467-586-156']
+    ACTIVATION_TEMPLATE = 'TL-968-877-904'
+    ENVIRONMENT = 'preview'
+
+
     ROOT_PATH_LOG = "rootPathLog"
     SUBSCRIPTION_UPDATED = 'SUBSCRIPTION_UPDATED'
 
     # Processing steps
-    ACTIVATION_TEMPLATE = 'ACTIVATION_TEMPLATE'
+    # ACTIVATION_TEMPLATE = 'ACTIVATION_TEMPLATE'
 
 
     # ACTIONS
