@@ -1,0 +1,62 @@
+Connect Processor SDK Template in Python
+
+The Connect Processor SDK Template for Python provides developers an complete skeleton to start their automation project using the Connect Fulfillment API together with the Connect Processor SDK for Python.
+
+In order to use this library, please ensure that you have read first the documentation available on Connect knowledge base article located here, this one will provide you a great information on the Processor that should automate the provisioning of subscription requests in Connect.
+Requirements
+
+In order to use this template you will need an environment capable to run Python scripts, Python 3.6 is supported.
+Installation
+
+The Example Connect Processor must be deployed on any environment with Python minimum required version: 3.6.
+
+Complete the steps below to install the required packages and to deploy Example Connect Processor
+
+    Run the following command to install Python 3 on CentOS 7:
+
+sudo yum install centos-release-scl
+sudo yum install rh-python36
+scl enable rh-python36 bash
+
+2. Install Development Tools by running this command:
+
+sudo yum groupinstall 'Development Tools'
+
+
+3. Save the Example Connect Processor on the desired location.
+For example: /usr/processor/ExampleConnectProcessor/
+
+Assuming that you have python and virtualenv installed, and forked the connect-python-sdk repository, set up your environment and install the required dependencies like this:
+
+$ git clone https://github.com/{your_github_account}/connect-processor-template-for-python.git
+$ cd connect-python-sdk
+$ virtualenv venv
+$ . venv/bin/activate
+$ pip install -r requirements/test.txt
+
+
+4. Create a Virtual Environment inside the connector folder <processor application folder name> by running the following command:
+cd /usr/processor/<processor application folder name>.
+scl enable rh-python36 bash
+python -m venv venv
+source venv/bin/activate
+
+
+5. Run this command to install the package requirements:
+venv/bin/pip install -r requirements.txt
+
+
+6. Running tests
+
+The connect-processor-template-for-python uses unittest for unit testing.
+
+To run the entire tests suite, from the tests directory, execute:
+
+$ python -m unittest launcher.py
+
+
+7. Set up the configurations
+
+Provide Connect API end point and token in config.json
+Provide Product Id and Template Id from Connect in Globals.py
+Refer - 2. Configurations
