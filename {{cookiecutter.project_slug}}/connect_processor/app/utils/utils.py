@@ -3,8 +3,8 @@ from connect.models.configuration import Param, Configuration
 from connect.exceptions import SkipRequest, InquireRequest, FailRequest
 from connect.resources.fulfillment import FulfillmentResource
 from connect.config import Config
-from app.utils.message import Message
-from app.utils.globals import Globals
+from connect_processor.app.utils.message import Message
+from connect_processor.app.utils.globals import Globals
 import json
 from copy import deepcopy
 from typing import Any, Dict
@@ -18,7 +18,7 @@ class Utils:
 
     @staticmethod
     def get_config_file() -> Dict[str, Any]:
-        with open('./config.json') as file_handle:
+        with open("./config.json") as file_handle:
             config = json.load(file_handle)
         return config
 
@@ -88,3 +88,25 @@ class Utils:
             products=config_file['products']
         ))
         return fulfilment_resource.search_asset_request(filter)
+
+    # for open cli
+def get_basic_value(base, value):
+    if base and value in base:
+        return base[value]
+    return '-'
+
+def get_value(base, prop, value):
+    if prop in base:
+        return get_basic_value(base[prop], value)
+    return '-'
+
+# def get_param_by_id(param_id):
+#     """ Get a parameter of the asset.
+#             :param str param_id: Id of the the parameter to get.
+#             :return: The parameter with the given id, or ``None`` if it was not found.
+#             :rtype: :py:class:`.Param` | None
+#             """
+#     try:
+#         return list(filter(lambda param: param.id == param_id, params))[0]
+#     except IndexError:
+#         return None

@@ -1,9 +1,0 @@
-{
-  "apiEndpoint": "",
-  "apiKey": "",
-
-  "partnerConfig": {
-    "apiUrl": "https://private-anon-91baad9f4d-vendorexample.apiary-mock.com",
-    "apiKey": "Vendor API key"
-  }
-}
