@@ -1,0 +1,7 @@
+{
+    "name": "{{cookiecutter.project_name}}",
+    "readme_file": "Readme.md",
+    "version": "{{cookiecutter.version}}",
+    "language": "python"
+
+}
