@@ -1,8 +1,10 @@
 class Globals:
 
     # Global Constants
+
     PRODUCTS = ['PRD-###-###-###']
     ACTIVATION_TEMPLATE = 'TL-###-###-###'
+    ACTIVATION_TEMPLATE_TIER = 'TL-###-###-###'
     ENVIRONMENT = 'preview'
 
 

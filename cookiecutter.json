@@ -12,4 +12,7 @@
     "Require_subscription_change_usecase": "y/n",
 	"Require_subscription_cancel_usecase": "y/n",
 	"Require_subscription_suspend_and_resume_usecases": "y/n"
+	"Require usage reporting for Pay-as-you-go usecase":"y/n"
+	"Require dynamic validation of ordering parameters for subscription":"y/n"
+	"Require reseller/customer information for proovisioning":"y/n
 }

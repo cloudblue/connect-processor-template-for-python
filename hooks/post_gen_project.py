@@ -36,6 +36,17 @@ def main():
         c_file = os.path.join('connect_processor', 'app', 'resume.py')
         remove_file(c_file)
 
+    if '{{ cookiecutter.Require usage reporting for Pay-as-you-go usecase }}'.lower() == 'n':
+        c_file = os.path.join('connect_processor', 'app', 'report_usage.py')
+        remove_file(c_file)
+
+    if '{{ cookiecutter.Require dynamic validation of ordering parameters for subscription }}'.lower() == 'n':
+        c_file = os.path.join('connect_processor', 'app', 'dynamic_validation.py')
+        remove_file(c_file)
+
+    if '{{ cookiecutter.Require reseller/customer information for provisioning }}'.lower() == 'n':
+        c_file = os.path.join('connect_processor', 'app', 'tier_fulfillment.py')
+        remove_file(c_file)
 
     print('Done! Your report project is ready to go!')
 
