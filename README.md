@@ -35,7 +35,7 @@ Once cookiecutter is installed you can instantiate it against this repository:
 	project_slug [my_awesome_project]:
 	description [My reports are really usefull!]:
 	author: CloudBlue Vendor,
- version: 0.1.0,
+	version: 0.1.0,
     	license: [
       	  "Apache Software License 2.0",
      	   "MIT",
