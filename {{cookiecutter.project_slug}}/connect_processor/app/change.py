@@ -29,10 +29,11 @@ class Change():
                 external_subscription_id = get_basic_value(param, 'value')
                 # This external_subscription_id from Vendor platform might be required to call the Vendor API to cancel subscription
 
-        # Update/Change the subscription in vendor system by calling the Vendor API to update/change subscription
+        # Customize: Add code to Update/Change the subscription in vendor system by calling the Vendor API to update/change subscription
 
         payload = {"template_id": Globals.SUBSCRIPTION_APPROVED_TEMPLATE}
-        result = client.requests[get_basic_value(request, 'id')]('approve').post(payload=payload)
+        request_id = get_basic_value(request, 'id')
+        result = client.requests.resource(request_id)('approve').post(payload=payload)
         # Approve the fulfillment request. The status of Fulfillment Request object to Approved and Subscription object status remains Active.
         # The statuses will not get updated as Approved/Active if any of the mandatory/required fulfilment parameter in Fulfillment Request remain empty.
 

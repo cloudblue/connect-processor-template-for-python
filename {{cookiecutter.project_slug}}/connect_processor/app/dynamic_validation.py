@@ -25,9 +25,12 @@ def do_validate():
         params = data['asset']['params']
 
         param_1 = get_parameter_by_id(params, 'param_dynamic_validation')
-        # If the validation fails, fill i the error message in value_error param
+        # If the validation fails, fill in the error message in value_error param
         param_1['value_error'] = 'This error is from the validation script!'
         params = set_parameter(params, param_1)
+
+        # Customize: Ensure the parameter id in addressed here matches with the parameter id configured in the Product in Vendor Portal
+        # Add more validations as required. And customize the validation logic and error message
 
         data['asset']['params'] = params
         # Returning the response with the 'value_error' param filled will fail the dynamic validation and display error message on the ordering screen

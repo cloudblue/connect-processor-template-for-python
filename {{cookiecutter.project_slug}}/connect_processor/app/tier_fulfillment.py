@@ -19,7 +19,7 @@ class TierConfiguration():
         # Customize: Remove this step
 
         if tcr_status == 'inquiring':
-            tcr_pending = client('tier').config_requests[tcr_id]('pend').post(payload={})
+            tcr_pending = client.ns('tier').collection('config_requests')[tcr_id]('pend').post(payload={})
 
         # Updating mandatory/required information in the parameters of scope tier.
         # This step is not required in Production environment.
@@ -34,11 +34,11 @@ class TierConfiguration():
                 "value_error": "",
                 "structured_value": ""}]}
 
-        update_tier_parameter = client('tier').config_requests[tcr_id].update(payload=payload)
+        update_tier_parameter = client.ns('tier').collection('config-requests')[tcr_id].update(payload=payload)
 
         # Update the status to Approved
         # The status will not get updated to Approved if any required/mandatory parameter is empty
         payload1 = {"template":{"id":Globals.T1_APPROVED_TEMPLATE}}
-        result = client('tier').config_requests[tcr_id]('approve').post(payload=payload1)
+        result = client.ns('tier').collection('config-requests')[tcr_id]('approve').post(payload=payload1)
         result
 
