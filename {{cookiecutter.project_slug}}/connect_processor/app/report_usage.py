@@ -1,9 +1,12 @@
-from connect_processor.app.utils.globals import Globals
-from tempfile import NamedTemporaryFile
+
 import os
 
 class Usage():
+    # This is step 1, to create a Usage report in Connect for a particular Provider, Product, Marketplace, Currency, Timezone and Period
+    # Customize this method to provide the above mentioned details in the payload
+    # This method will create the Usage report entry in Connect and return the ID generated for the same
     def create_usage_file(product_id, client):
+        # ToDo: replace the static data with the inf from Connect
         payload = {
             "name": "string",
             "description": "string",
@@ -21,14 +24,19 @@ class Usage():
             },
             "external_id": ""
             }
-        file = client('usage').files
-        # client.usage('files').create(payload=payload)
+
         file = client('usage').files.create(payload=payload)
-        # client.usage.files('create').post(payload=payload)
-        # client.usage('files').post(payload=payload)
+
         return file['id']
 
+    def write_usage_file(product_id, client):
+        # TpDo:implementation pending
+        usage_path = os.path.join(os.path.realpath(os.path.curdir), 'app', 'usage_file.xlsx')
+
+    # This method will upload the Usage excel file to Connect
+
     def upload_usage(usage_file_id, client):
+        # ToDo:change this file path with the file that will be written by this processor
         usage_path = os.path.join(os.path.realpath(os.path.curdir),'app','usage_file.xlsx')
 
         bin_data = open(usage_path, 'rb').read()
@@ -39,11 +47,10 @@ class Usage():
 
         return result
 
-
+    # This is final step #3 to submit the Usage report. This report will then be available to the Provider.
     def submit_usage(usage_file_id, client):
 
-        # client.usage[usage_file_id]('submit').post(payload=hex_data)
         result = client('usage').files[usage_file_id].submit.update()
-        # client.requests[request_id]('approve').post(payload=payload1)
+
         return result
 

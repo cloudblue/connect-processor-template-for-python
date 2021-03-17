@@ -1,9 +1,6 @@
-from connect.models.configuration import Param, Configuration
-
-from connect.exceptions import SkipRequest, InquireRequest, FailRequest
 from connect.resources.fulfillment import FulfillmentResource
 from connect.config import Config
-from connect_processor.app.utils.message import Message
+
 from connect_processor.app.utils.globals import Globals
 import json
 from copy import deepcopy
@@ -53,23 +50,7 @@ class Utils:
     def get_status_code(info):
         return info['statusCode'] if 'statusCode' in info else ''
 
-    @staticmethod
-    def get_activation_template(configuration, template_type, marketplace_id):
-        template_id = ""
 
-        try:
-            # Getting the Activation Template provided in configuration parameter of Product in Connect
-            if hasattr(configuration.get_param_by_id(template_type), 'value') and not Utils.is_null_or_empty(
-                    configuration.get_param_by_id(template_type).value):
-                template_id = configuration.get_param_by_id(template_type).value
-            # Activation Template can be configured in config.json file in this Processor for a particular marketplace.
-            # Customize this method accordingly to get the Activation Template ID from the config.json as desired.
-            else:
-                error_message = Message.Shared.NOT_FOUND_TEMPLATE.format(template_type,
-                                                                         marketplace_id)
-                raise SkipRequest(error_message)
-        finally:
-            return template_id
 
     @staticmethod
     def is_downsize_request(items):

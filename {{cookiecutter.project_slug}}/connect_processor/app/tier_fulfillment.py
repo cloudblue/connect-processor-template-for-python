@@ -1,13 +1,44 @@
 from connect_processor.app.utils.globals import Globals
-from connect_processor.app.utils import utils
+from connect_processor.app.utils.utils import Utils, get_basic_value
 
 class TierConfiguration():
+
+    # The purpose of the TCR is to get the details required for provisioning from the Reseller/Tier1
+    # The Reseller receives an Activation form to submit the information
 
     def process_request(request, client):
 
         # Process the request for the tier.
-        # Update mandatory/required information in the parameters of scope tier.
+        tcr_id = get_basic_value(request, 'id')
+        tcr_status = get_basic_value(request, 'status')
+
+
+        # Updating the status of TCR from Inquiring to Pending
+        # This step is not required in Production environment.
+        # because this status gets updated from Inquiring to Pending when the Reseller/Tier1 submits the required information in the Activation form made available to him in the Commerce platform
+        # Customize: Remove this step
+
+        if tcr_status == 'inquiring':
+            tcr_pending = client('tier').config_requests[tcr_id]('pend').post(payload={})
+
+        # Updating mandatory/required information in the parameters of scope tier.
+        # This step is not required in Production environment.
+        # Because this information will get updated when the Reseller fills in the information in the Activation form made available to them in a link in  Commerce Platform
+        # Customize: Remove this step
+
+        Info_for_tier = "Information from the reseller"
+        payload = {
+            "params": [{
+                "id": "Info_for_tier",
+                "value": Info_for_tier,
+                "value_error": "",
+                "structured_value": ""}]}
+
+        update_tier_parameter = client('tier').config_requests[tcr_id].update(payload=payload)
+
         # Update the status to Approved
-        request_id = 123
-        payload = {"template_id": Globals.ACTIVATION_TEMPLATE_TIER}
-        # result = client.requests[request_id]('approve').post(payload=payload)
+        # The status will not get updated to Approved if any required/mandatory parameter is empty
+        payload1 = {"template":{"id":Globals.T1_APPROVED_TEMPLATE}}
+        result = client('tier').config_requests[tcr_id]('approve').post(payload=payload1)
+        result
+

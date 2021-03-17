@@ -25,8 +25,16 @@ class Purchase():
                 "params": [
                     {
                         # Customize the fulfillment parameter id, as configured in product in Connect
-                        "id": "subscriptionId",
-                        "value": vendor_subscription_id,
+                        # Saving the Subscription ID from Vendor system is encouraged to be able to map the subscription in Connect with the subscription in Vendor system
+                        "id": "param_a",
+                        "value": "value for parameter a",
+                        "value_error": "",
+                        "structured_value": ""
+                    },
+                    {
+                        # Customize the fulfillment parameter id, as configured in product in Connect
+                        "id": "param_b",
+                        "value": "value for parameter b",
                         "value_error": "",
                         "structured_value": ""
                     }
@@ -39,7 +47,7 @@ class Purchase():
         fulfillment = client.requests[request_id].update(payload=payload)
         # Approved is the final status of the Fulfillment Request of Subscription in Connect
         # Approve the fulfillment request. The status of fulfillment request will be updated to Approved. And the status of Subscription will get updated to Active.
-        payload1 = {"template_id": Globals.ACTIVATION_TEMPLATE}
+        payload1 = {"template_id": Globals.SUBSCRIPTION_APPROVED_TEMPLATE}
         # Provide the template id configured as Activation template. This template has the message for the customer that the subscription is successfully provisioned.
         result = client.requests[request_id]('approve').post(payload=payload1)
         # Returning the Activation Template will update the status of Fullfilment Request to Approved and Subscription status to Active.

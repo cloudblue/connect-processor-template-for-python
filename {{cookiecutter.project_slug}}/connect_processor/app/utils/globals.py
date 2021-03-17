@@ -3,8 +3,8 @@ class Globals:
     # Global Constants
 
     PRODUCTS = ['PRD-###-###-###']
-    ACTIVATION_TEMPLATE = 'TL-###-###-###'
-    ACTIVATION_TEMPLATE_TIER = 'TL-###-###-###'
+    SUBSCRIPTION_APPROVED_TEMPLATE = 'TTL-###-###-###'
+    T1_APPROVED_TEMPLATE = 'TL-###-###-###'
     ENVIRONMENT = 'preview'
 
 
@@ -12,7 +12,7 @@ class Globals:
     SUBSCRIPTION_UPDATED = 'SUBSCRIPTION_UPDATED'
 
     # Processing steps
-    # ACTIVATION_TEMPLATE = 'ACTIVATION_TEMPLATE'
+    # SUBSCRIPTION_APPROVED_TEMPLATE = 'SUBSCRIPTION_APPROVED_TEMPLATE'
 
 
     # ACTIONS
