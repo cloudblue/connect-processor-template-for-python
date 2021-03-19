@@ -50,7 +50,12 @@ class Utils:
     def get_status_code(info):
         return info['statusCode'] if 'statusCode' in info else ''
 
-
+    @staticmethod
+    def get_item_by_id(items, item_id) -> object:
+        for item in items:
+            if item['id'] == item_id:
+                return item
+        raise Exception('Item {id} not found.'.format(id=item_id))
 
     @staticmethod
     def is_downsize_request(items):
