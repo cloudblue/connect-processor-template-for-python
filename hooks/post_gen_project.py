@@ -41,6 +41,8 @@ def main():
     if '{{ cookiecutter.Require_usage_reporting_for_Pay_as_you_go_usecase }}'.lower() == 'n':
         c_file = os.path.join('connect_processor', 'app', 'report_usage.py')
         remove_file(c_file)
+        c_file = os.path.join('tests', 'test_report_usage.py')
+        remove_file(c_file)
 
     if '{{ cookiecutter.Require_dynamic_validation_of_ordering_parameters_for_subscription }}'.lower() == 'n':
         c_file = os.path.join('connect_processor', 'app', 'dynamic_validation.py')

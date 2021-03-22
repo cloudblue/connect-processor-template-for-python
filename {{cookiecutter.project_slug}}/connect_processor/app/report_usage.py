@@ -17,20 +17,12 @@ class Usage:
     def process_usage(self):
         usage_data = Usage._get_usage_records()
 
+        # Customize with Vendor API response
         if len(usage_data['subscriptions']) == 0:
             # no data to report
             return
 
-        # build a filter to search the subscriptions with data to report
-        # Customize From now assuming we have only one record
-        subs_ids_filter = usage_data['subscriptions'][0]['id']
-
-        # Load the distribution contracts to find the subscriptions with data to build the reports
-        query = R()
-        query &= R().type.oneof(['distribution'])
-        query &= R().status.oneof(['active'])
-        contracts = self.client.collection("contracts").filter(query)
-
+        contracts = self._get_contracts()
         counter = 0
         # Retrieve the subscriptions for each contract
         for contract in contracts:
@@ -40,7 +32,7 @@ class Usage:
             # use the next line for TEST purposes:
             # query &= R().contract.id.oneof(['CRD-00000-00000-00000'])
             query &= R().contract.id.oneof([contract['id']])
-            query &= R().id.oneof([subs_ids_filter])
+            query &= R().id.oneof([self._get_subscription_filter(usage_data)])
 
             subscriptions = self.client.collection("assets").filter(query)
             subscriptions.order_by('product.id')
@@ -51,25 +43,58 @@ class Usage:
                 counter = counter + 1
                 if product_id is None:
                     product_id = subscription['product']['id']
+                    self._validate_ppu_schema(product_id)
                 if product_id != subscription['product']['id']:
                     self._create_usage(contract, product_id, record_data)
                     product_id = subscription['product']['id']
+                    self._validate_ppu_schema(product_id)
                     record_data.clear()
                 else:
-                    # Looks for the subscription usage data and fill the records collection
-                    subs_usage_data = Utils.get_item_by_id(usage_data['subscriptions'], subscription['id'])
-                    usage_data = UsageData()
-                    usage_data.record_description = subscription['product']['name'] + " Period: " + subs_usage_data['start_date'] + "-" + subs_usage_data['end_date']
-                    usage_data.item_mpn = subs_usage_data['mpn']
-                    usage_data.quantity = subs_usage_data['quantity']
-                    usage_data.start_time_utc = subs_usage_data['start_date']
-                    usage_data.end_time_utc = subs_usage_data['end_date']
-                    usage_data.asset_recon_id = subs_usage_data['id']
-                    record_data.append(usage_data)
+                    # Using subscription usage data, fills the records collection
+                    record_data.append(Usage._get_usage_data(subscription, usage_data))
             if product_id is not None:
                 self._create_usage(contract, product_id, record_data)
-        # if counter != len(usage_data['subscriptions']):
-            # Some subscription was not found in Connect.
+
+        # Customize with Vendor API response
+        if counter != len(usage_data['subscriptions']):
+            # Check if all the subscriptions have been reported in the files.
+            raise ValueError()
+
+    @staticmethod
+    def _get_subscription_filter(usage_data):
+        # Customize with Vendor API response. From now assuming we have only one record to report
+        return usage_data['subscriptions'][0]['id']
+
+    def _get_contracts(self):
+        # Loads the distribution contracts to find the subscriptions with data to build the reports
+        query = R()
+        query &= R().type.oneof(['distribution'])
+        query &= R().status.oneof(['active'])
+        contracts = self.client.collection("contracts").filter(query)
+        return contracts
+
+    @staticmethod
+    def _get_usage_data(subscription, usage_data):
+        # type: (Any, [Any]) -> UsageData
+        # Retrieves th
+        subs_usage_data = Utils.get_item_by_id(usage_data['subscriptions'], subscription['id'])
+        usage_data_object = UsageData()
+        usage_data_object.record_description = subscription['product']['name'] + " Period: " + subs_usage_data[
+            'start_date'] + "-" + subs_usage_data['end_date']
+        usage_data_object.item_mpn = subs_usage_data['mpn']
+        usage_data_object.quantity = subs_usage_data['quantity']
+        usage_data_object.start_time_utc = subs_usage_data['start_date']
+        usage_data_object.end_time_utc = subs_usage_data['end_date']
+        usage_data_object.asset_recon_id = subs_usage_data['id']
+        return usage_data_object
+
+    def _validate_ppu_schema(self, product_id):
+        # type: (str) -> None
+        # Retrieves the ppu schema to check if is QT, assumed for this template. If different raises NotImplementedError
+        schema = self.client.collection('products')[product_id].get()['capabilities']['ppu']['schema']
+        # using the schema Vendor can check if has to report Price, Quantity...
+        if schema != "QT":
+            raise NotImplementedError()
 
     # Loads the usage data from Vendor system calling Vendor API.
     @staticmethod
@@ -92,7 +117,7 @@ class Usage:
         return usage_data
 
     def _create_usage(self, contract, product_id, record_data):
-        # type: (Any, str,  List[Dict[str, Union[str,int]]]) -> None
+        # type: (Any, str,  [UsageData]) -> None
         # Add a usage file for a Contract and product
         usage_file_id = self._create_usage_file(contract, product_id)
         # The Usage file has records with the consumption details about the usage of PAYG items
@@ -148,14 +173,12 @@ class Usage:
     def _submit_usage(self, usage_file_id):
         # type: (str) -> None
         # Submits the Usage report. This report will then be available to the Provider.
-        # ToDo: It fails if the status is not valid and the file was wrong
-        # 400 Bad Request: USG_001 - Requested status change is not valid.
         self.client.ns('usage').files[usage_file_id].action('submit').post()
 
     class UsageFileExcelCreator:
 
         def create_usage_excel(self, record_data):
-            # type: (List[UsageData]) -> str
+            # type: ([UsageData]) -> str
             # Creates the Excel .xlsx File and loads the records returning the file path
             excel_records = Usage.UsageFileExcelCreator._load_records(record_data)
             workbook = self._create_usage_records_sheet(records=excel_records)
@@ -237,7 +260,6 @@ class Usage:
 
 
 # Class to fill the Excel usage file.
-# ToDo Add the columns for Dynamic item creation
 class ExcelUsageRecord:
     usage_record_id = None  # type: str
     """ (str) Usage record id. """
@@ -293,7 +315,7 @@ class ExcelUsageRecord:
 
 # Class to retrieve the vendor usage data to fill the rows in the usage files (ExcelUsageRecord class)
 class UsageData:
-    record_description = None # type: str
+    record_description = None  # type: str
     """ (str) Usage record Description """
     # item MPN on Vendor portal
     item_mpn = None  # type: str

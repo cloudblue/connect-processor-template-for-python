@@ -1,5 +1,5 @@
 {
   "connectApiEndpoint": "http://example.org/v1",
-  "connectApiKey": "SU-zzz-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-
+  "connectApiKey": "SU-zzz-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+  "rootPathUsage": "./usage"
 }
