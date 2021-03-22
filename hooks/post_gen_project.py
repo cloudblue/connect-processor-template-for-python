@@ -25,6 +25,8 @@ def main():
     if '{{ cookiecutter.Require_subscription_change_usecase }}'.lower() == 'n':
         c_file = os.path.join('connect_processor','app','change.py')
         remove_file(c_file)
+        c_file = os.path.join('tests', 'test_change.py')
+        remove_file(c_file)
 
     if '{{ cookiecutter.Require_subscription_cancel_usecase }}'.lower() == 'n':
         c_file = os.path.join('connect_processor', 'app', 'cancel.py')
