@@ -1,56 +1,312 @@
-
+from typing import Any
+from openpyxl import Workbook
+from datetime import datetime
+from calendar import monthrange
 import os
+import ntpath
+from connect_processor.app.utils.utils import Utils
+from cnct import ConnectClient
+from cnct import R
 
-class Usage():
-    # This is step 1, to create a Usage report in Connect for a particular Provider, Product, Marketplace, Currency, Timezone and Period
-    # Customize this method to provide the above mentioned details in the payload
-    # This method will create the Usage report entry in Connect and return the ID generated for the same
-    def create_usage_file(product_id, client):
-        # ToDo: replace the static data with the inf from Connect
+
+class Usage:
+    def __init__(self, client: ConnectClient):
+        self.client = client
+
+    # This method loads the contracts and subscriptions to create and fill the usage file
+    def process_usage(self):
+        usage_data = Usage._get_usage_records()
+
+        if len(usage_data['subscriptions']) == 0:
+            # no data to report
+            return
+
+        # build a filter to search the subscriptions with data to report
+        # Customize From now assuming we have only one record
+        subs_ids_filter = usage_data['subscriptions'][0]['id']
+
+        # Load the distribution contracts to find the subscriptions with data to build the reports
+        query = R()
+        query &= R().type.oneof(['distribution'])
+        query &= R().status.oneof(['active'])
+        contracts = self.client.collection("contracts").filter(query)
+
+        counter = 0
+        # Retrieve the subscriptions for each contract
+        for contract in contracts:
+            query = R()
+
+            # In preview all the subscription belongs to contract CRD-00000-00000-00000
+            # use the next line for TEST purposes:
+            # query &= R().contract.id.oneof(['CRD-00000-00000-00000'])
+            query &= R().contract.id.oneof([contract['id']])
+            query &= R().id.oneof([subs_ids_filter])
+
+            subscriptions = self.client.collection("assets").filter(query)
+            subscriptions.order_by('product.id')
+            product_id = None
+            record_data = []
+            # Finds the subscriptions with usage data for each contract, create the Usage for each different product
+            for subscription in subscriptions:
+                counter = counter + 1
+                if product_id is None:
+                    product_id = subscription['product']['id']
+                if product_id != subscription['product']['id']:
+                    self._create_usage(contract, product_id, record_data)
+                    product_id = subscription['product']['id']
+                    record_data.clear()
+                else:
+                    # Looks for the subscription usage data and fill the records collection
+                    subs_usage_data = Utils.get_item_by_id(usage_data['subscriptions'], subscription['id'])
+                    usage_data = UsageData()
+                    usage_data.record_description = subscription['product']['name'] + " Period: " + subs_usage_data['start_date'] + "-" + subs_usage_data['end_date']
+                    usage_data.item_mpn = subs_usage_data['mpn']
+                    usage_data.quantity = subs_usage_data['quantity']
+                    usage_data.start_time_utc = subs_usage_data['start_date']
+                    usage_data.end_time_utc = subs_usage_data['end_date']
+                    usage_data.asset_recon_id = subs_usage_data['id']
+                    record_data.append(usage_data)
+            if product_id is not None:
+                self._create_usage(contract, product_id, record_data)
+        # if counter != len(usage_data['subscriptions']):
+            # Some subscription was not found in Connect.
+
+    # Loads the usage data from Vendor system calling Vendor API.
+    @staticmethod
+    def _get_usage_records():
+        # Customize this to call vendor System and load the usage to report for each subscription.
+        # It is need to retrieve the asset.id or the fulfillment parameter configured to indentify the subscription.
+        # Also choose the reporting Schema, for this processor QT to report quantity.
+        # For this sample the "id" is the asset.id.
+        usage_data = {
+            "subscriptions": [
+                {
+                    "id": "AS-####-####-####",
+                    "mpn": "#####",  # The PAYG connect item MPN
+                    "quantity": 10,  # This sample uses the QT model, use amount for PR
+                    "start_date": '2021-02-01 00:00:00',  # Period reported. Format "%Y-%m-%d %H:%M:%S"
+                    "end_date": '2021-02-28 00:00:00'
+                }
+            ]
+        }
+        return usage_data
+
+    def _create_usage(self, contract, product_id, record_data):
+        # type: (Any, str,  List[Dict[str, Union[str,int]]]) -> None
+        # Add a usage file for a Contract and product
+        usage_file_id = self._create_usage_file(contract, product_id)
+        # The Usage file has records with the consumption details about the usage of PAYG items
+        usage_excel_path = Usage.UsageFileExcelCreator().create_usage_excel(record_data)
+        # Upload this usage file in Connect that reports the consumption
+        self._upload_usage(usage_file_id, usage_excel_path)
+        # Submit the usage for this period and this product subscriptions to the Provider
+        self._submit_usage(usage_file_id)
+
+    def _create_usage_file(self, contract, product_id):
+        # type: (Any, str) -> str
+        # Creates a Usage report in Connect for a particular Contract and Product, in the month before the current.
+        # Returns the usage file ID: UF-yyyy-mm-####-####
+        contract_id = contract['id']
+        currency = self.client.collection('marketplaces')[contract['marketplace']['id']].get()['currency']
+        date_to = datetime(datetime.today().year, month=datetime.today().month - 1,
+                           day=monthrange(datetime.today().year, datetime.today().month - 1)[1])
+        date_from = datetime(datetime.today().year, month=datetime.today().month - 1, day=1)
+        name = date_from.strftime("%d-%m-%Y") + " - " + date_to.strftime("%d-%m-%Y")
+        # Customize to assign the external file id as your need.
+        external_file_id = contract_id + " " + product_id + " " + datetime.today().strftime("%B")
+
         payload = {
-            "name": "string",
-            "description": "string",
-            "note": "string",
+            "name": name,
+            "description": "Usage " + datetime.today().strftime("%B"),  # Can be changed
             "period": {
-                "from": "2021-02-27",
-                "to": "2021-02-27"
+                "from": date_from.strftime("%Y-%m-%d"),
+                "to": date_to.strftime("%Y-%m-%d")
             },
-            "currency": "USD",
+            "currency": currency,
             "product": {
-             "id": "PRD-714-131-720"
+                "id": product_id
             },
             "contract": {
-                "id": "CRD-00000-00000-00000"
+                "id": contract_id
             },
-            "external_id": ""
-            }
-
-        file = client('usage').files.create(payload=payload)
-
+            "external_id": external_file_id
+        }
+        file = self.client.ns('usage').files.create(payload=payload)
         return file['id']
 
-    def write_usage_file(product_id, client):
-        # TpDo:implementation pending
-        usage_path = os.path.join(os.path.realpath(os.path.curdir), 'app', 'usage_file.xlsx')
+    def _upload_usage(self, usage_file_id, usage_file_path):
+        # type: (str, str) -> None
+        # Uploads the Usage Excel file to Connect usage file
+        file_data = open(usage_file_path, 'rb').read()
+        file_name = ntpath.basename(usage_file_path)
 
-    # This method will upload the Usage excel file to Connect
+        payload = {
+            "usage_file": (file_name, file_data)
+        }
+        self.client.ns('usage').files[usage_file_id].action('upload').post(files=payload)
 
-    def upload_usage(usage_file_id, client):
-        # ToDo:change this file path with the file that will be written by this processor
-        usage_path = os.path.join(os.path.realpath(os.path.curdir),'app','usage_file.xlsx')
+    def _submit_usage(self, usage_file_id):
+        # type: (str) -> None
+        # Submits the Usage report. This report will then be available to the Provider.
+        # ToDo: It fails if the status is not valid and the file was wrong
+        # 400 Bad Request: USG_001 - Requested status change is not valid.
+        self.client.ns('usage').files[usage_file_id].action('submit').post()
 
-        bin_data = open(usage_path, 'rb').read()
+    class UsageFileExcelCreator:
 
-        files = {'file': bin_data}
+        def create_usage_excel(self, record_data):
+            # type: (List[UsageData]) -> str
+            # Creates the Excel .xlsx File and loads the records returning the file path
+            excel_records = Usage.UsageFileExcelCreator._load_records(record_data)
+            workbook = self._create_usage_records_sheet(records=excel_records)
 
-        result = client('usage').files[usage_file_id].upload.create(payload=files, )
+            # Saves the file in the .config folder
+            config_file = Utils.get_config_file()
+            usage_path = config_file['rootPathUsage']
+            if not os.path.exists(usage_path):
+                os.mkdir(usage_path)
+            path = usage_path + "/usage_file" + datetime.today().strftime("%Y%m%d%H%M%S") + ".xlsx"
+            workbook.save(path)
+            return path
 
-        return result
+        @staticmethod
+        def _create_usage_records_sheet(records):
+            # type: (List[ExcelUsageRecord]) -> Workbook
+            # Creates the Excel WorkBook and completes the usage_records sheet
+            book = Workbook()
+            sheet = book.active
+            sheet.title = 'usage_records'
+            sheet['A1'] = 'record_id'
+            sheet['B1'] = 'record_note'
+            sheet['C1'] = 'item_search_criteria'
+            sheet['D1'] = 'item_search_value'
+            sheet['E1'] = 'amount'
+            sheet['F1'] = 'quantity'
+            sheet['G1'] = 'start_time_utc'
+            sheet['H1'] = 'end_time_utc'
+            sheet['I1'] = 'asset_search_criteria'
+            sheet['J1'] = 'asset_search_value'
+            sheet['K1'] = 'item_name'
+            sheet['L1'] = 'item_mpn'
+            sheet['M1'] = 'item_precision'
+            sheet['N1'] = 'category_id'
+            sheet['O1'] = 'asset_recon_id'
+            sheet['P1'] = 'tier'
+            for index, record in enumerate(records):
+                row = str(index + 2)
+                sheet['A' + row] = record.usage_record_id
+                sheet['B' + row] = record.usage_record_note
+                sheet['C' + row] = record.item_search_criteria
+                sheet['D' + row] = record.item_search_value
+                sheet['E' + row] = record.amount
+                sheet['F' + row] = record.quantity
+                sheet['G' + row] = record.start_time_utc
+                sheet['H' + row] = record.end_time_utc
+                sheet['I' + row] = record.asset_search_criteria
+                sheet['J' + row] = record.asset_search_value
+                sheet['K' + row] = record.item_name
+                sheet['L' + row] = record.item_npm
+                sheet['M' + row] = record.item_precision
+                sheet['N' + row] = record.category_id
+                sheet['O' + row] = record.asset_recon_id
+                sheet['P' + row] = record.tier
+            return book
 
-    # This is final step #3 to submit the Usage report. This report will then be available to the Provider.
-    def submit_usage(usage_file_id, client):
+        @staticmethod
+        def _load_records(record_data):
+            # type: (List[UsageData]) -> List[ExcelUsageRecord]
+            # Returns the Excel rows to fill the File with the records data.
+            usages = []
+            for record in record_data:
+                excel_record = ExcelUsageRecord()
+                excel_record.usage_record_id = datetime.today().strftime("%Y%m%d%H%M%S")  # ToDo check criteria
+                excel_record.usage_record_note = record.record_description
+                excel_record.item_search_criteria = 'item.mpn'
+                excel_record.item_search_value = record.item_mpn
+                excel_record.quantity = record.quantity
+                excel_record.amount = record.amount
+                excel_record.start_time_utc = record.start_time_utc
+                excel_record.end_time_utc = record.end_time_utc
+                excel_record.asset_search_criteria = 'asset.id'  # could be 'parameter.[name of the parameter]]'
+                # How to find the asset on Connect.  Typical use case is to use a parameter
+                # provided by vendor, in this case use the parameter name, "subscription_id".  Additionally, asset.id
+                # can be used in case you want to use Connect identifiers.
+                excel_record.asset_search_value = record.asset_recon_id
+                usages.append(excel_record)
+            return usages
 
-        result = client('usage').files[usage_file_id].submit.update()
 
-        return result
+# Class to fill the Excel usage file.
+# ToDo Add the columns for Dynamic item creation
+class ExcelUsageRecord:
+    usage_record_id = None  # type: str
+    """ (str) Usage record id. """
 
+    usage_record_note = None  # type: str
+    """ (str) Usage record note. """
+
+    item_search_criteria = None  # type: str
+    """ (str) Item search criteria. """
+
+    item_search_value = None  # type: str
+    """ (str) Item search value. """
+
+    amount = None  # type: float
+    """ (float) Amount. """
+
+    quantity = None  # type: int
+    """ (int) Quantity. """
+
+    start_time_utc = None  # type: str
+    """ (str) Start Time in UTC. """
+
+    end_time_utc = None  # type: str
+    """ (str) End Time in UTC. """
+
+    asset_search_criteria = None  # type: str
+    """ (str) Asset search criteria. """
+
+    asset_search_value = None  # type: str
+    """ (str) Asset search value. """
+
+    item_name = None  # type: str
+    """ (str) Item name. """
+
+    item_npm = None  # type: str
+    """ (str) Item npm. """
+
+    item_unit = None  # type: str
+    """ (str) Item unit. """
+
+    item_precision = None  # type: str
+    """ (str) Item precision. """
+
+    category_id = None  # type: str
+    """ (str) Category Id. """
+
+    asset_recon_id = None  # type: str
+    """ (str) Asset recon Id. """
+
+    tier = None  # type: str
+    """ (str) Tier. """
+
+
+# Class to retrieve the vendor usage data to fill the rows in the usage files (ExcelUsageRecord class)
+class UsageData:
+    record_description = None # type: str
+    """ (str) Usage record Description """
+    # item MPN on Vendor portal
+    item_mpn = None  # type: str
+    """ (str) Usage record item MPN """
+    # Quantity to report
+    quantity = 1  # type: decimal
+    """ (decimal) Usage record quantity """
+    # Amount, price to report
+    amount = 1  # type: decimal
+    """ (decimal) Usage record amount """
+    start_time_utc = None  # type: datetime
+    """ (datetime) Date from """
+    end_time_utc = None  # type: datetime
+    """ (datetime) Date to """
+    asset_recon_id = None  # type: str
+    """ (str) Usage record asset or subscription fulfillment parameter id """

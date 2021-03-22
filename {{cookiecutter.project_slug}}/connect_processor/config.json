@@ -1,5 +1,6 @@
 {
   "connectApiEndpoint": "",
-  "connectApiKey": ""
+  "connectApiKey": "",
+  "rootPathUsage": "./usage"
 
 }

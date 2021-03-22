@@ -1,12 +1,10 @@
 from cnct import ConnectClient
 from datetime import datetime
-from calendar import monthrange
 from connect_processor.app.utils.globals import Globals
 from connect_processor.app.utils.utils import get_basic_value, get_value, Utils
-from connect_processor.app.report_usage import Usage
 from cnct import R
 project_manager = __import__('connect_processor.app', globals(), locals(),
-                                 ['purchase', 'change', 'cancel', 'suspend', 'resume', 'tier_fulfillment'], 0)
+                             ['purchase', 'change', 'cancel', 'suspend', 'resume', 'tier_fulfillment','report_usage'], 0)
 
 
 # The processor.py is the entry point of Processor execution
@@ -89,23 +87,6 @@ if __name__ == '__main__':
         # If the product contains items of type Pay-as-you-go, then the usage of such items needs to be submitted in Connect
         # Refer https://connect.cloudblue.com/community/modules/usage_module/ for more details about Usage in Connect
 
-        # Check if the product has Pay-as-you-go (PAYG) items and capability
-        # If yes, introduce the logic to set up frequency to report usage
         # This usage can be submitted as per the desired frequency
-        # Here, for example, the processor reports usage at the last day of the month
-        # Customize: The logic for the frequency for reporting Usage
-        todays_date = datetime.today().date()
-        last_day_of_month = monthrange(todays_date.year, todays_date.month)[1]
-        if todays_date == last_day_of_month:
-            # This will file a usage for a particular Provider, Product, Marketplace, Currency, Timezone and Period
-            usage_file = project_manager.report_usage.Usage.create_usage_file(Globals.PRODUCTS[0], client)
-            # The Usage file is an excel file which contains consumption details about the usage of PAYG items
-            usage_excel = project_manager.report_usage.Usage.write_usage_file(Globals.PRODUCTS[0], client)
-            # Upload this usage file in Connect that reports the consumption
-            project_manager.report_usage.Usage.upload_usage(usage_file, client)
-            # Submit the usage for this period and this product subscriptions to the Provider
-            project_manager.report_usage.Usage.submit_usage(usage_file, client)
-
-
-
-
+        if datetime.today().day == Globals.DAY_TO_REPORT_USAGE:
+            project_manager.report_usage.Usage(client).process_usage()
