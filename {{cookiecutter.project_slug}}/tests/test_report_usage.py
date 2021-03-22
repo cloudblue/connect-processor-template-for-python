@@ -44,7 +44,3 @@ class TestUsage(unittest.TestCase):
         path = Usage.UsageFileExcelCreator().create_usage_excel(record_data)
         self.assertTrue(os.path.exists(path))
         os.remove(path)
-
-
-if __name__ == '__main__':
-    unittest.main()
