@@ -26,8 +26,9 @@ def do_validate():
 
         param_1 = get_parameter_by_id(params, 'param_dynamic_validation')
         # If the validation fails, fill in the error message in value_error param
-        param_1['value_error'] = 'This error is from the validation script!'
-        params = set_parameter(params, param_1)
+        # Customize: Implement validation logic and add desired error message
+        # param_1['value_error'] = 'This error is from the validation script!'
+        # params = set_parameter(params, param_1)
 
         # Customize: Ensure the parameter id in addressed here matches with the parameter id configured in the Product in Vendor Portal
         # Add more validations as required. And customize the validation logic and error message
