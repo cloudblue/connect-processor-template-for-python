@@ -1,17 +1,17 @@
 
     {
-        "id": "PR-7537-9409-0828-001",
+        "id": "PR-8055-3268-5577-001",
         "type": "purchase",
         "note": "",
         "asset": {
-            "id": "AS-7537-9409-0828",
+            "id": "AS-8055-3268-5577",
             "status": "processing",
-            "external_id": "RRJ78AX0I0",
-            "external_uid": "334bec72-f165-41ca-bdc8-4107d59471c4",
+            "external_id": "7RJQ6S4TV6",
+            "external_uid": "106f4b5c-b901-4c27-85e6-3420d9012440",
             "product": {
-                "id": "PRD-467-586-156",
-                "icon": "/media/VA-258-273/PRD-467-586-156/media/PRD-467-586-156-logo.png",
-                "name": "Test123",
+                "id": "PRD-103-781-723",
+                "icon": "/media/VA-258-273/PRD-103-781-723/media/PRD-103-781-723-logo.png",
+                "name": "TestProduct",
                 "status": "draft"
             },
             "connection": {
@@ -32,109 +32,119 @@
             },
             "events": {
                 "created": {
-                    "at": "2020-12-15T05:18:43+00:00"
+                    "at": "2021-03-19T12:21:32+00:00"
                 },
                 "updated": {
-                    "at": "2020-12-15T05:18:43+00:00"
+                    "at": "2021-03-19T12:21:40+00:00"
                 }
             },
             "items": [
                 {
-                    "id": "PRD_467_586_156_0001",
-                    "global_id": "PRD-467-586-156-0001",
+                    "id": "PRD_103_781_723_0001",
+                    "global_id": "PRD-103-781-723-0001",
                     "mpn": "MPN-A",
                     "old_quantity": "0",
-                    "quantity": "1",
+                    "quantity": "3",
                     "type": "Gb",
-                    "display_name": "Prd 467 586 156 0001",
+                    "display_name": "Prd 103 781 723 0001",
                     "period": "Monthly",
-                    "item_type": "Reservation",
-                    "params": []
+                    "item_type": "Reservation"
                 }
             ],
             "params": [
                 {
-                    "id": "customer_admin_email",
-                    "name": "customer_admin_email",
-                    "type": "email",
-                    "phase": "ordering",
-                    "description": "customer admin email",
-                    "value": "",
-                    "value_error": "",
-                    "title": "customer admin email",
-                    "constraints": {
-                        "placeholder": "I am the placeholder text",
-                        "hint": "I am the hint text",
-                        "meta": {},
-                        "required": false
-                    }
-                },
-                {
-                    "id": "subscriptionId",
-                    "name": "subscriptionId",
+                    "id": "param_a",
+                    "name": "param_a",
                     "type": "text",
                     "phase": "fulfillment",
-                    "description": "Tenant ID created while provisioning subscription",
+                    "description": "Description of the Parameter A",
                     "value": "",
                     "value_error": "",
-                    "title": "Subscription ID",
+                    "title": "Title of the Parameter A",
                     "constraints": {
-                        "placeholder": "subscription id",
-                        "hint": "I am the hint text",
                         "meta": {},
                         "required": true,
                         "reconciliation": false
+                    }
+                },
+                {
+                    "id": "param_b",
+                    "name": "param_b",
+                    "type": "text",
+                    "phase": "fulfillment",
+                    "description": "Description of the Parameter B",
+                    "value": "",
+                    "value_error": "",
+                    "title": "Title of the Parameter B",
+                    "constraints": {
+                        "meta": {},
+                        "required": true,
+                        "reconciliation": false
+                    }
+                },
+                {
+                    "id": "param_dynamic_validation",
+                    "name": "param_dynamic_validation",
+                    "type": "text",
+                    "phase": "ordering",
+                    "description": "Parameter asked at ordering will be required for provisioning the subscription",
+                    "value": "",
+                    "value_error": "",
+                    "title": "Parameter asked at ordering that needs dynamic validation",
+                    "constraints": {
+                        "placeholder": "Parameter provided at ordering for which we need dynamic validation",
+                        "hint": "I am the hint text",
+                        "meta": {},
+                        "required": false
                     }
                 }
             ],
             "tiers": {
                 "customer": {
-                    "id": "TA-5082-1764-5918",
-                    "external_id": "9332",
-                    "external_uid": "184e024a-26ec-4ac1-954f-9e9632549e79",
-                    "name": "O'Conner - Runolfsdottir",
-                    "tax_id": "M6FMGG6GSD",
+                    "id": "TA-7868-4643-1199",
+                    "external_uid": "332211",
+                    "type": "customer",
+                    "name": "cust2",
                     "contact_info": {
-                        "address_line1": "Ernie Square",
-                        "address_line2": "Sipes Avenue",
-                        "city": "Anguilla",
-                        "state": "Anguilla",
-                        "postal_code": "AI-2640",
-                        "country": "GB",
+                        "address_line1": "mg road",
+                        "address_line2": "",
+                        "city": "mumbai",
+                        "state": "mh",
+                        "postal_code": "400123",
+                        "country": "IN",
                         "contact": {
-                            "first_name": "Eugene",
-                            "last_name": "Langosh",
-                            "email": "Neha.Shelke+Eugene_Langosh@ingrammicro.com",
+                            "first_name": "cust2fname",
+                            "last_name": "cust2lname",
+                            "email": "cust2@cust.com",
                             "phone_number": {
-                                "country_code": "+44",
-                                "area_code": "121",
-                                "phone_number": "2345678",
+                                "country_code": "+91",
+                                "area_code": "755",
+                                "phone_number": "5059167",
                                 "extension": ""
                             }
                         }
                     }
                 },
                 "tier1": {
-                    "id": "TA-8938-4857-3801",
-                    "external_id": "67249",
-                    "external_uid": "d23d59df-8a86-4f68-ba85-fc51fa1a6038",
-                    "name": "Russel - Ziemann",
-                    "tax_id": "Y6A7UBQ3WC",
+                    "id": "TA-4559-6820-1704",
+                    "external_uid": "112233",
+                    "type": "reseller",
+                    "name": "Test reseller 2",
                     "contact_info": {
-                        "address_line1": "Jacinthe Burgs",
-                        "address_line2": "Reilly Way",
-                        "city": "Anguilla",
-                        "state": "Anguilla",
-                        "postal_code": "AI-2640",
-                        "country": "GB",
+                        "address_line1": "mg road",
+                        "address_line2": "",
+                        "city": "mumbai",
+                        "state": "mh",
+                        "postal_code": "400123",
+                        "country": "IN",
                         "contact": {
-                            "first_name": "Bridgette",
-                            "last_name": "Veum",
-                            "email": "Neha.Shelke+Bridgette_Veum@ingrammicro.com",
+                            "first_name": "res2fname",
+                            "last_name": "res2lname",
+                            "email": "res2fname@res2.com",
                             "phone_number": {
-                                "country_code": "+44",
-                                "area_code": "121",
-                                "phone_number": "2345678",
+                                "country_code": "+91",
+                                "area_code": "755",
+                                "phone_number": "5059167",
                                 "extension": ""
                             }
                         }
@@ -143,66 +153,7 @@
                 "tier2": {}
             },
             "configuration": {
-                "params": [
-                    {
-                        "value": "TL-968-877-904",
-                        "events": {
-                            "created": {
-                                "at": "2020-11-08T20:47:08+00:00",
-                                "by": {
-                                    "id": "UR-875-975-076",
-                                    "name": "Neha Shelke"
-                                }
-                            },
-                            "updated": {
-                                "at": "2020-11-08T20:47:08+00:00"
-                            }
-                        },
-                        "id": "activationTemplate",
-                        "title": "activationTemplate",
-                        "description": "activationTemplate",
-                        "type": "text",
-                        "scope": "marketplace",
-                        "phase": "configuration",
-                        "hint": "I am the hint text",
-                        "placeholder": "I am the placeholder text",
-                        "constraints": {
-                            "required": true,
-                            "hidden": false,
-                            "unique": false,
-                            "shared": null
-                        }
-                    },
-                    {
-                        "value": "TL-832-317-626",
-                        "events": {
-                            "created": {
-                                "at": "2020-11-19T06:38:32+00:00",
-                                "by": {
-                                    "id": "UR-875-975-076",
-                                    "name": "Neha Shelke"
-                                }
-                            },
-                            "updated": {
-                                "at": "2020-11-19T06:38:32+00:00"
-                            }
-                        },
-                        "id": "suspendSubscriptionTemplate",
-                        "title": "suspendSubscriptionTemplate",
-                        "description": "Template fof suspension of subscription",
-                        "type": "text",
-                        "scope": "marketplace",
-                        "phase": "configuration",
-                        "hint": "I am the hint text",
-                        "placeholder": "I am the placeholder text",
-                        "constraints": {
-                            "required": true,
-                            "hidden": false,
-                            "unique": false,
-                            "shared": null
-                        }
-                    }
-                ]
+                "params": []
             },
             "marketplace": {
                 "id": "MP-78894",
@@ -216,8 +167,8 @@
         },
         "reason": "",
         "status": "pending",
-        "created": "2020-12-15T05:18:43+00:00",
-        "updated": "2020-12-15T05:18:43+00:00",
+        "created": "2021-03-19T12:21:32+00:00",
+        "updated": "2021-03-19T12:21:40+00:00",
         "answered": false,
         "assignee": "",
         "activation_key": "",

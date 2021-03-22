@@ -8,6 +8,8 @@ class Purchase():
     def process_request(request, client):
         # Type PURCHASE means, it is a new subscription in Connect
 
+        request_id = get_basic_value(request, 'id')
+
         # Create the subscription in vendor system by calling the Vendor API to create subscription
         # Customize: implement the Vendor API call to create the subscription in Vendor portal
 
@@ -44,25 +46,23 @@ class Purchase():
         }
 
         # This will update the value in the fulfillment parameter
-        request_id = get_basic_value(request, 'id')
-        # fulfillment = client.requests[request_id].update(payload=payload)
-        fulfillment = client.requests.resource(request_id).update(payload=payload)
+        fulfillment_request = Purchase.update_parameters(request_id, payload, client)
 
         # Approved is the final status of the Fulfillment Request of Subscription in Connect
-        # Approve the fulfillment request. The status of fulfillment request will be updated to Approved. And the status of Subscription will get updated to Active.
         payload1 = {"template_id": Globals.SUBSCRIPTION_APPROVED_TEMPLATE}
         # Provide the template id configured as Activation template. This template has the message for the customer that the subscription is successfully provisioned.
-        result = client.requests.resource(request_id)('approve').post(payload=payload1)
+        purchase_result = Purchase.approve_request(request_id, payload1, client)
+        return purchase_result
         # This will update the status of Fullfilment Request to Approved and Subscription status to Active.
         # The statuses will not get updated as Approved/Active if any of the mandatory/required fulfilment parameter in Fulfillment Request remain empty.
 
+    def update_parameters(request_id, payload, client):
+        # This will update the value in the parameters in the fulfillment request
+        fulfillment_request = client.requests.resource(request_id).update(payload=payload)
+        return fulfillment_request
 
-
-
-
-
-
-
-
-
-
+    def approve_request(request_id, payload, client):
+        # Approve the fulfillment request. The status of fulfillment request will be updated to Approved. And the status of Subscription will get updated to Active.
+        result = client.requests[request_id].approve
+        purchase_result = result.post(payload=payload)
+        return purchase_result

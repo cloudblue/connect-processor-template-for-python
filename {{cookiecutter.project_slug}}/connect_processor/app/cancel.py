@@ -25,13 +25,16 @@ class Cancel():
         # Provide the template id configured as Activation template. This template has the message for the customer that the subscription is terminated.
         payload = {"template_id": Globals.SUBSCRIPTION_APPROVED_TEMPLATE}
         request_id = get_basic_value(request, 'id')
-        result = client.requests.resource(request_id)('approve').post(payload=payload)
-
+        result = Cancel.approve_request(request_id, payload, client)
+        return result
         # Returning the Activation Template will update the status of Fullfilment Request object to Approved and Subscription object status to Terminated.
         # The statuses will not get updated as Approved and Terminated if any of the mandatory/required fulfilment parameter in Fullfilment Request remain empty.
 
-
-
+    def approve_request(request_id, payload, client):
+        # Approve the fulfillment request. The status of Fulfillment Request object to Approved and Subscription object status to Terminated.
+        result = client.requests[request_id].approve
+        change_result = result.post(payload=payload)
+        return change_result
 
 
 
