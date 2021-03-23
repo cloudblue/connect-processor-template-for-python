@@ -6,7 +6,8 @@ class Globals:
     SUBSCRIPTION_APPROVED_TEMPLATE = 'TTL-###-###-###'
     T1_APPROVED_TEMPLATE = 'TL-###-###-###'
     ENVIRONMENT = 'preview'
-
+    
+    DAY_TO_REPORT_USAGE = '#'
 
     ROOT_PATH_LOG = "rootPathLog"
     SUBSCRIPTION_UPDATED = 'SUBSCRIPTION_UPDATED'
