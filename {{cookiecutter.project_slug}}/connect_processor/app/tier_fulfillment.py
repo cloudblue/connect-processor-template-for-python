@@ -34,11 +34,33 @@ class TierConfiguration():
                 "value_error": "",
                 "structured_value": ""}]}
 
-        update_tier_parameter = client.ns('tier').collection('config-requests')[tcr_id].update(payload=payload)
+        update_tier_parameter = TierConfiguration.update_parameters(tcr_id, payload, client)
 
         # Update the status to Approved
         # The status will not get updated to Approved if any required/mandatory parameter is empty
         payload1 = {"template":{"id":Globals.T1_APPROVED_TEMPLATE}}
-        result = client.ns('tier').collection('config-requests')[tcr_id]('approve').post(payload=payload1)
-        result
+        result = TierConfiguration.approve_request(tcr_id, payload1, client)
+        return result
 
+    def update_parameters(tcr_id, payload, client):
+        # This will update the value in the parameters in the fulfillment request
+        tier_request = client.ns('tier').collection('config-requests')[tcr_id].update(payload=payload)
+        return tier_request
+
+    def approve_request(tcr_id, payload, client):
+        # Approve the fulfillment request. The status of fulfillment request will be updated to Approved. And the status of Subscription will get updated to Active.
+        result = client.ns('tier').collection('config-requests')[tcr_id]('approve').post(payload=payload)
+        # result = client.requests[request_id].approve
+        # purchase_result = result.post(payload=payload)
+        return purchase_result
+    def update_parameters(tcr_id, payload, client):
+        # This will update the value in the parameters in the fulfillment request
+        tier_request = client.ns('tier').collection('config-requests')[tcr_id].update(payload=payload)
+        return tier_request
+
+    def approve_request(tcr_id, payload, client):
+        # Approve the fulfillment request. The status of fulfillment request will be updated to Approved. And the status of Subscription will get updated to Active.
+        result = client.ns('tier').collection('config-requests')[tcr_id]('approve').post(payload=payload)
+        # result = client.requests[request_id].approve
+        # purchase_result = result.post(payload=payload)
+        return purchase_result
