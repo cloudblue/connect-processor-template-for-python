@@ -25,7 +25,7 @@ def get_parameters(data):
 @api.route('/validate', methods=['POST'])
 def do_validate():
 
-        data = request.request_value
+        data = request.return_value
         params = get_parameters(data)
         # Customize: Change the parameter ID as per configured in Connect Product. Here param ID is 'param_dynamic_validation'
         param_1 = get_parameter_by_id(params, 'param_dynamic_validation')

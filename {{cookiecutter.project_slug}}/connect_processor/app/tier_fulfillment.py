@@ -49,18 +49,8 @@ class TierConfiguration():
 
     def approve_request(tcr_id, payload, client):
         # Approve the fulfillment request. The status of fulfillment request will be updated to Approved. And the status of Subscription will get updated to Active.
-        result = client.ns('tier').collection('config-requests')[tcr_id]('approve').post(payload=payload)
-        # result = client.requests[request_id].approve
-        # purchase_result = result.post(payload=payload)
-        return purchase_result
-    def update_parameters(tcr_id, payload, client):
-        # This will update the value in the parameters in the fulfillment request
-        tier_request = client.ns('tier').collection('config-requests')[tcr_id].update(payload=payload)
-        return tier_request
 
-    def approve_request(tcr_id, payload, client):
-        # Approve the fulfillment request. The status of fulfillment request will be updated to Approved. And the status of Subscription will get updated to Active.
-        result = client.ns('tier').collection('config-requests')[tcr_id]('approve').post(payload=payload)
-        # result = client.requests[request_id].approve
-        # purchase_result = result.post(payload=payload)
+        result = client.ns('tier').collection('config-requests')[tcr_id].approve
+        purchase_result = result.post(payload=payload)
+
         return purchase_result

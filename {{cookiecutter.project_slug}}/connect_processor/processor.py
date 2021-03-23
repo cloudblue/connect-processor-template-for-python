@@ -25,9 +25,7 @@ if __name__ == '__main__':
         # Filter to fetch the Tier-Config-Request (TCR) for this product
         # The processor needs to process only the TCRs in Pending status
         # Customize: Remove the 'inquiring' status from the filter query. It is added for the ease of debug and unit tests
-        # query_tcr = R()
-        # query_tcr &= R().Settings.requests.configuration.product.id.oneof(Globals.PRODUCTS)
-        # query_tcr &= R().Settings.requests.status.oneof(['pending', 'inquiring'])
+
         query_tcr = R()
         query_tcr &= R().configuration.product.id.oneof(Globals.PRODUCTS)
         query_tcr &= R().status.oneof(['pending', 'inquiring'])
