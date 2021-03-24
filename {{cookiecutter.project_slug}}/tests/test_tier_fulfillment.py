@@ -19,10 +19,12 @@ class TestTierConfiguration(unittest.TestCase):
     # TIER CONFIGURATION UNIT TESTS
     # /////////////////////
 
-    @patch('connect_processor.app.tier_fulfillment.TierConfiguration.update_parameters',
+    @patch('connect_processor.app.utils.utils.Utils.update_parameters',
            MagicMock(return_value=""))
-    @patch('connect_processor.app.tier_fulfillment.TierConfiguration.approve_request',
+    @patch('connect_processor.app.utils.utils.Utils.approve_request',
             MagicMock(return_value=TestUtils.get_response("purchase_subscription_response.json")))
+    @patch('connect_processor.app.utils.utils.Utils.get_template_by_product',
+           MagicMock(return_value="TL-###-###-###"))
     def test_purchase_pass(self):
         request = TestUtils.get_response("create_purchase_request_body.json")
         response = TestUtils.get_response("purchase_subscription_response.json")

@@ -1,5 +1,5 @@
 from connect_processor.app.utils.globals import Globals
-from connect_processor.app.utils.utils import Utils, get_basic_value
+from connect_processor.app.utils.utils import Utils
 
 class TierConfiguration():
 
@@ -9,8 +9,8 @@ class TierConfiguration():
     def process_request(request, client):
 
         # Process the request for the tier.
-        tcr_id = get_basic_value(request, 'id')
-        tcr_status = get_basic_value(request, 'status')
+        tcr_id = Utils.get_basic_value(request, 'id')
+        tcr_status = Utils.get_basic_value(request, 'status')
 
 
         # Updating the status of TCR from Inquiring to Pending
@@ -34,30 +34,22 @@ class TierConfiguration():
                 "value_error": "",
                 "structured_value": ""}]}
 
-        update_tier_parameter = TierConfiguration.update_parameters(tcr_id, payload, client)
+        update_tier_parameter = Utils.update_Tier1_parameters(tcr_id, payload, client)
 
         # Update the status to Approved
         # The status will not get updated to Approved if any required/mandatory parameter is empty
         # Get the template
-        product = get_value(request, 'asset', 'product')
-        product_id = get_basic_value(product, 'id')
-        template = client.collection('products')[product_id].templates.filter(name=('Default Activation Template'),
-                                                                              scope=('tier1')).first()
+        product = Utils.get_value(request, 'configuration', 'product')
+        product_id = Utils.get_basic_value(product, 'id')
         # Customize: Change the template name to match with the name configured in Product in Connect
-        template_id = get_basic_value(template, 'id')
-        payload1 = {"template_id": template_id}
-        result = TierConfiguration.approve_request(tcr_id, payload1, client)
+        template_id = Utils.get_template_by_product(product_id, 'Default Activation Template', 'tier1', client)
+        payload1 = {
+            "template": {
+                "id": template_id
+            }
+        }
+        result = Utils.approve_Tier_config_request(tcr_id, payload1, client)
         return result
 
-    def update_parameters(tcr_id, payload, client):
-        # This will update the value in the parameters in the fulfillment request
-        tier_request = client.ns('tier').collection('config-requests')[tcr_id].update(payload=payload)
-        return tier_request
 
-    def approve_request(tcr_id, payload, client):
-        # Approve the fulfillment request. The status of fulfillment request will be updated to Approved. And the status of Subscription will get updated to Active.
 
-        result = client.ns('tier').collection('config-requests')[tcr_id].approve
-        purchase_result = result.post(payload=payload)
-
-        return purchase_result

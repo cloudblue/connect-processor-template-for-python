@@ -20,8 +20,10 @@ class TestChange(unittest.TestCase):
     # /////////////////////
 
 
-    @patch('connect_processor.app.change.Change.approve_request',
+    @patch('connect_processor.app.utils.utils.Utils.approve_request',
             MagicMock(return_value=TestUtils.get_response("purchase_subscription_response.json")))
+    @patch('connect_processor.app.utils.utils.Utils.get_template_by_product',
+           MagicMock(return_value="TL-###-###-###"))
     def test_change_pass(self):
         request = TestUtils.get_response("create_purchase_request_body.json")
         response = TestUtils.get_response("purchase_subscription_response.json")

@@ -1,7 +1,7 @@
 from cnct import ConnectClient
 from datetime import datetime
 from connect_processor.app.utils.globals import Globals
-from connect_processor.app.utils.utils import get_basic_value, get_value, Utils
+from connect_processor.app.utils.utils import Utils
 from cnct import R
 project_manager = __import__('connect_processor.app', globals(), locals(),
                              ['purchase', 'change', 'cancel', 'suspend', 'resume', 'tier_fulfillment','report_usage'], 0)
@@ -16,11 +16,11 @@ if __name__ == '__main__':
     connect_api_url = config_file['connectApiEndpoint'],
     # apiKey is the API key for authorization created in Integrations menu of Connect
     connect_key = config_file['connectApiKey'],
-    # products are the list of IDs of the products which needs to be processed by this Processor
+    # Products are the list of IDs of the products which needs to be processed by this Processor
     client = ConnectClient(api_key=connect_key[0], endpoint=connect_api_url[0])
 
-    # If the Product has parameters of scope 'Tier' then Tier usecase implementation will be required. Make sure the project has the Tier usecase included during project craetion
-    # The TCRs needs to be processed first and then the corresponding Fulfillment Requests
+    # If the Product has parameters of scope 'Tier' then Tier usecase implementation will be required. Make sure the project has the Tier usecase included during project creation
+    # The Tier Config Requests (TCR) needs to be processed first and then the corresponding Fulfillment Requests
     if bool(project_manager.tier_fulfillment):
         # Filter to fetch the Tier-Config-Request (TCR) for this product
         # The processor needs to process only the TCRs in Pending status
@@ -45,12 +45,12 @@ if __name__ == '__main__':
 
     # Processing each request
     for request in requests:
-        request_id = get_basic_value(request, 'id')
-        request_status = get_basic_value(request, 'status')
+        request_id = Utils.get_basic_value(request, 'id')
+        request_status = Utils.get_basic_value(request, 'status')
         # Process all Fulfillment Request with status Pending
         if request_status == 'pending':
             # Check the type of Fulfillment Request
-            type = get_basic_value(request, 'type')
+            type = Utils.get_basic_value(request, 'type')
 
             if type == 'purchase':
                 # Type PURCHASE means, it is a new subscription in Connect
@@ -86,5 +86,6 @@ if __name__ == '__main__':
         # Refer https://connect.cloudblue.com/community/modules/usage_module/ for more details about Usage in Connect
 
         # This usage can be submitted as per the desired frequency
+        # Customize: Implement the logic for the required frequency of reporting Usage into Connect
         if datetime.today().day == Globals.DAY_TO_REPORT_USAGE:
             project_manager.report_usage.Usage(client).process_usage()
