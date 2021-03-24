@@ -18,65 +18,64 @@ class Usage:
         usage_data = Usage._get_usage_records()
 
         # Customize with Vendor API response
-        if len(usage_data['subscriptions']) == 0:
+        if Usage._count_usage_records(usage_data) == 0:
             # no data to report
             return
 
         contracts = self._get_contracts()
         counter = 0
-        # Retrieve the subscriptions for each contract
+        # For each contract report the usage
         for contract in contracts:
-            query = R()
+            counter += self._report_contract_usage(contract, usage_data)
 
-            # In preview all the subscription belongs to contract CRD-00000-00000-00000
-            # use the next line for TEST purposes:
-            # query &= R().contract.id.oneof(['CRD-00000-00000-00000'])
-            query &= R().contract.id.oneof([contract['id']])
-            query &= R().id.oneof([self._get_subscription_filter(usage_data)])
-
-            subscriptions = self.client.collection("assets").filter(query)
-            subscriptions.order_by('product.id')
-            product_id = None
-            record_data = []
-            # Finds the subscriptions with usage data for each contract, create the Usage for each different product
-            for subscription in subscriptions:
-                counter = counter + 1
-                if product_id is None:
-                    product_id = subscription['product']['id']
-                    self._validate_ppu_schema(product_id)
-                if product_id != subscription['product']['id']:
-                    self._create_usage(contract, product_id, record_data)
-                    product_id = subscription['product']['id']
-                    self._validate_ppu_schema(product_id)
-                    record_data.clear()
-                else:
-                    # Using subscription usage data, fills the records collection
-                    record_data.append(Usage._get_usage_data(subscription, usage_data))
-            if product_id is not None:
-                self._create_usage(contract, product_id, record_data)
-
-        # Customize with Vendor API response
-        if counter != len(usage_data['subscriptions']):
-            # Check if all the subscriptions have been reported in the files.
+        if counter != Usage._count_usage_records(usage_data):
+            # Not all the subscriptions with data have been reported in the files.
             raise ValueError()
 
-    @staticmethod
-    def _get_subscription_filter(usage_data):
-        # Customize with Vendor API response. From now assuming we have only one record to report
-        return usage_data['subscriptions'][0]['id']
+    def _report_contract_usage(self, contract, usage_data):
+        # For the contract report the usage, filtering the subscriptions with data to report.
+        # In preview environment all the subscription belongs to contract CRD-00000-00000-00000
+        subscriptions = self._get_subscriptions(contract, self._get_subscription_filter(usage_data))
+        product_id = None
+        record_data = []
+        counter = 0
+        # Finds the subscriptions with usage data for each contract, create the Usage for each different product
+        for subscription in subscriptions:
+            counter = counter + 1
+            if product_id is None:
+                product_id = subscription['product']['id']
+                self._validate_ppu_schema(product_id)
+            if product_id != subscription['product']['id']:
+                self._create_usage(contract, product_id, record_data)
+                product_id = subscription['product']['id']
+                self._validate_ppu_schema(product_id)
+                record_data.clear()
+            else:
+                # Using subscription usage data, fills the records collection
+                record_data.append(Usage._get_usage_data(subscription, usage_data))
+        if product_id is not None:
+            self._create_usage(contract, product_id, record_data)
+        return counter
 
     def _get_contracts(self):
         # Loads the distribution contracts to find the subscriptions with data to build the reports
         query = R()
         query &= R().type.oneof(['distribution'])
         query &= R().status.oneof(['active'])
-        contracts = self.client.collection("contracts").filter(query)
-        return contracts
+        return self.client.collection("contracts").filter(query)
+
+    def _get_subscriptions(self, contract, subs_id_filter):
+        query = R()
+        query &= R().contract.id.oneof([contract['id']])
+        query &= R().id.oneof([subs_id_filter])
+        subscriptions = self.client.collection("assets").filter(query)
+        subscriptions.order_by('product.id')
+        return subscriptions
 
     @staticmethod
     def _get_usage_data(subscription, usage_data):
         # type: (Any, [Any]) -> UsageData
-        # Retrieves th
+        # Fills the UsageDate object with the subscription and usage data from Vendor.
         subs_usage_data = Utils.get_item_by_id(usage_data['subscriptions'], subscription['id'])
         usage_data_object = UsageData()
         usage_data_object.record_description = subscription['product']['name'] + " Period: " + subs_usage_data[
@@ -96,7 +95,7 @@ class Usage:
         if schema != "QT":
             raise NotImplementedError()
 
-    # Loads the usage data from Vendor system calling Vendor API.
+    # Loads the usage data from Vendor system calling Vendor API. To be Customized.
     @staticmethod
     def _get_usage_records():
         # Customize this to call vendor System and load the usage to report for each subscription.
@@ -115,6 +114,17 @@ class Usage:
             ]
         }
         return usage_data
+
+    # Counts the subscriptions with Data to report from Vendor System. To be Customized.
+    @staticmethod
+    def _count_usage_records(usage_data):
+        return len(usage_data['subscriptions'])
+
+    # Creates a filter with the Subscription ids to report. To be Customized.
+    @staticmethod
+    def _get_subscription_filter(usage_data):
+        # Customize with Vendor API response. From now assuming we have only one record to report
+        return usage_data['subscriptions'][0]['id']
 
     def _create_usage(self, contract, product_id, record_data):
         # type: (Any, str,  [UsageData]) -> None
