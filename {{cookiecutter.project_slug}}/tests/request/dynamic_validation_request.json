@@ -1,16 +1,16 @@
 {
-    "id": "PR-4940-6455-0304-001",
+    "id": "PR-6990-1715-4162-001",
     "type": "purchase",
     "note": "",
     "asset": {
-        "id": "AS-4940-6455-0304",
+        "id": "AS-6990-1715-4162",
         "status": "draft",
-        "external_id": "PZU6I0T4CF",
-        "external_uid": "bed940f1-bb04-4b2d-a301-55cfa905087a",
+        "external_id": "V8Y72FOAQ3",
+        "external_uid": "a7afd622-9b16-4e8c-9794-a41f9180ca6d",
         "product": {
-            "id": "PRD-103-781-723",
-            "icon": "/media/VA-258-273/PRD-103-781-723/media/PRD-103-781-723-logo.png",
-            "name": "TestProduct",
+            "id": "PRD-022-202-585",
+            "icon": "/media/VA-258-273/PRD-022-202-585/media/PRD-022-202-585-logo.png",
+            "name": "TestDynamicValidation",
             "status": "draft"
         },
         "connection": {
@@ -31,70 +31,40 @@
         },
         "events": {
             "created": {
-                "at": "2021-03-22T12:34:32+00:00"
+                "at": "2021-03-24T19:34:37+00:00"
             },
             "updated": {
-                "at": "2021-03-22T12:34:42+00:00"
+                "at": "2021-03-24T19:41:17+00:00"
             }
         },
         "items": [
             {
-                "id": "PRD_103_781_723_0001",
-                "global_id": "PRD-103-781-723-0001",
+                "id": "PRD_022_202_585_0001",
+                "global_id": "PRD-022-202-585-0001",
                 "mpn": "MPN-A",
                 "old_quantity": "0",
-                "quantity": "4",
+                "quantity": "85",
                 "type": "Gb",
-                "display_name": "Prd 103 781 723 0001",
+                "display_name": "Prd 022 202 585 0001",
                 "period": "Monthly",
                 "item_type": "Reservation"
             }
         ],
         "params": [
             {
-                "id": "param_a",
-                "name": "param_a",
-                "type": "text",
-                "phase": "fulfillment",
-                "description": "Description of the Parameter A",
-                "value": "",
-                "value_error": "",
-                "title": "Title of the Parameter A",
-                "constraints": {
-                    "meta": {},
-                    "required": true,
-                    "reconciliation": false
-                }
-            },
-            {
-                "id": "param_b",
-                "name": "param_b",
-                "type": "text",
-                "phase": "fulfillment",
-                "description": "Description of the Parameter B",
-                "value": "",
-                "value_error": "",
-                "title": "Title of the Parameter B",
-                "constraints": {
-                    "meta": {},
-                    "required": true,
-                    "reconciliation": false
-                }
-            },
-            {
                 "id": "param_dynamic_validation",
                 "name": "param_dynamic_validation",
                 "type": "text",
                 "phase": "ordering",
-                "description": "Parameter asked at ordering will be required for provisioning the subscription",
-                "value": "123",
+                "description": "param_dynamic_validation",
+                "value": "12345",
                 "value_error": "",
-                "title": "Parameter asked at ordering that needs dynamic validation",
+                "title": "param_dynamic_validation",
                 "constraints": {
-                    "placeholder": "Parameter provided at ordering for which we need dynamic validation",
+                    "placeholder": "I am the placeholder text",
                     "hint": "I am the hint text",
                     "meta": {},
-                    "required": false
+                    "required": true
                 }
             }
         ],
@@ -166,8 +136,8 @@
     },
     "reason": "",
     "status": "draft",
-    "created": "2021-03-22T12:34:32+00:00",
-    "updated": "2021-03-22T12:34:42+00:00",
+    "created": "2021-03-24T19:34:37+00:00",
+    "updated": "2021-03-24T19:41:17+00:00",
     "answered": false,
     "assignee": "",
     "activation_key": "",
