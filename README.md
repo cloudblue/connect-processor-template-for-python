@@ -25,7 +25,7 @@ First of all, install in your local machine Cookiecutter, for example you can do
 
 Once cookiecutter is installed you can instantiate it against this repository:
 
-	$ cookiecutter https: https://github.com/cloudblue/connect-processor-template-for-python
+	$ cookiecutter https://github.com/cloudblue/connect-processor-template-for-python
  
  You'll be prompted for some values. Provide them and a Connect project will be created for you.
 
