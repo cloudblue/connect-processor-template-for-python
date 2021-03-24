@@ -62,8 +62,7 @@ class Usage:
         query = R()
         query &= R().type.oneof(['distribution'])
         query &= R().status.oneof(['active'])
-        contracts = self.client.collection("contracts").filter(query)
-        return contracts
+        return self.client.collection("contracts").filter(query)
 
     def _get_subscriptions(self, contract, subs_id_filter):
         query = R()
