@@ -1,6 +1,4 @@
 import requests
-from app.utils.message import Message
-from connect.exceptions import SkipRequest
 # from oauthlib.oauth2 import LegacyApplicationClient
 # from requests_oauthlib import OAuth2Session
 
@@ -36,28 +34,28 @@ class APIClient(object):
     def create_subscription(self, data):
         # self.authenticated()
 
-        # Customize the url as per the Vendor APIs
-        url = self.api_url + '/tenant'
+        # Customize: the url as per the Vendor APIs
+        url = self.api_url + '/create'
         # Method: Post
         r = requests.post(url=url, json=data, headers=self.authorization_header)
         self._check_and_pack_response(r)
         return r.json()
 
-    def change_subscription(self, data, tenant_id):
+    def change_subscription(self, data, subscription_id):
         # self.authenticated()
 
-        # Customize the url as per the Vendor APIs
-        url = self.api_url + '/tenant/' + tenant_id
+        # Customize: the url as per the Vendor APIs
+        url = self.api_url + '/subscription/' + subscription_id
         # Method: Put
         r = requests.put(url=url, json=data, headers=self.authorization_header)
         self._check_and_pack_response(r)
         return r.json()
 
-    def cancel_subscription(self, data, tenant_id):
+    def cancel_subscription(self, data, subscription_id):
         # self.authenticated()
 
-        # Customize the url as per the Vendor APIs
-        url = self.api_url + '/tenant/' + tenant_id
+        # Customize: the url as per the Vendor APIs
+        url = self.api_url + '/subscription/' + subscription_id
 
         # Method: Delete
         r = requests.delete(url=url, json=data, headers=self.authorization_header)
@@ -65,22 +63,22 @@ class APIClient(object):
         return r
 
 
-    def suspend_subscription(self, data, tenant_id):
+    def suspend_subscription(self, data, subscription_id):
         # self.authenticated()
 
-        # Customize the url as per the Vendor APIs
-        url = self.api_url + '/tenant/' + tenant_id + '/disable'
+        # Customize: the url as per the Vendor APIs
+        url = self.api_url + '/subscription/' + subscription_id + '/disable'
         # Method: Delete
         r = requests.put(url=url, json=data, headers=self.authorization_header)
         self._check_and_pack_response(r)
         return r
 
 
-    def resume_subscription(self, data, tenant_id):
+    def resume_subscription(self, data, subscription_id):
         # self.authenticated()
 
         # Customize the url as per the Vendor APIs
-        url = self.api_url + '/tenant/' + tenant_id + '/enable'
+        url = self.api_url + '/subscription/' + subscription_id + '/enable'
         # Method: Delete
         r = requests.put(url=url, json=data, headers=self.authorization_header)
         self._check_and_pack_response(r)
@@ -89,8 +87,6 @@ class APIClient(object):
 
     def _check_and_pack_response(self, r):
         request_attrs = ('json', 'status_code', 'ok')
-        for attr in request_attrs:
-            if not hasattr(r, attr):
-                raise SkipRequest(Message.Shared.RESPONSE_DOES_NOT_HAVE_ATTRIBUTE.format(attr, r.status_code))
-            if int(r.status_code) >= 299 and int(r.status_code) != 400:
-                raise SkipRequest(Message.Shared.RESPONSE_ERROR.format(r.status_code, r.text))
+        # Customize: Check if response does not have 'json', 'status_code', 'ok' then raise exception
+
+

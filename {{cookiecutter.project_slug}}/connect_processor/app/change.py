@@ -31,7 +31,14 @@ class Change():
 
         # Customize: Add code to Update/Change the subscription in vendor system by calling the Vendor API to update/change subscription
 
-        payload = {"template_id": Globals.SUBSCRIPTION_APPROVED_TEMPLATE}
+        # Get the template
+        product = get_value(request, 'asset', 'product')
+        product_id = get_basic_value(product, 'id')
+        template = client.collection('products')[product_id].templates.filter(name=('Default Activation Template'),
+                                                                              scope=('asset')).first()
+        # Customize: Change the template name to match with the name configured in Product in Connect
+        template_id = get_basic_value(template, 'id')
+        payload1 = {"template_id": template_id}
         request_id = get_basic_value(request, 'id')
         result = Change.approve_request(request_id, payload, client)
         return result

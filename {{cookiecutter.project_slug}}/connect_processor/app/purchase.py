@@ -1,4 +1,4 @@
-from connect_processor.app.utils.utils import Utils, get_basic_value
+from connect_processor.app.utils.utils import Utils, get_basic_value, get_value
 from connect_processor.app.utils.globals import Globals
 
 class Purchase():
@@ -49,8 +49,17 @@ class Purchase():
         fulfillment_request = Purchase.update_parameters(request_id, payload, client)
 
         # Approved is the final status of the Fulfillment Request of Subscription in Connect
-        payload1 = {"template_id": Globals.SUBSCRIPTION_APPROVED_TEMPLATE}
         # Provide the template id configured as Activation template. This template has the message for the customer that the subscription is successfully provisioned.
+
+        # Get the template
+        product = get_value(request, 'asset', 'product')
+        product_id = get_basic_value(product, 'id')
+        template = client.collection('products')[product_id].templates.filter(name=('Default Activation Template'), scope=('asset')).first()
+        # Customize: Change the template name to match with the name configured in Product in Connect
+        template_id = get_basic_value(template, 'id')
+        payload1 = {"template_id": template_id}
+
+        # Approve the fulfillment request with the template
         purchase_result = Purchase.approve_request(request_id, payload1, client)
         return purchase_result
         # This will update the status of Fullfilment Request to Approved and Subscription status to Active.

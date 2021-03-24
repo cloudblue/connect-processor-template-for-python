@@ -38,7 +38,14 @@ class TierConfiguration():
 
         # Update the status to Approved
         # The status will not get updated to Approved if any required/mandatory parameter is empty
-        payload1 = {"template":{"id":Globals.T1_APPROVED_TEMPLATE}}
+        # Get the template
+        product = get_value(request, 'asset', 'product')
+        product_id = get_basic_value(product, 'id')
+        template = client.collection('products')[product_id].templates.filter(name=('Default Activation Template'),
+                                                                              scope=('tier1')).first()
+        # Customize: Change the template name to match with the name configured in Product in Connect
+        template_id = get_basic_value(template, 'id')
+        payload1 = {"template_id": template_id}
         result = TierConfiguration.approve_request(tcr_id, payload1, client)
         return result
 

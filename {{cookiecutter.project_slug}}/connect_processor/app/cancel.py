@@ -23,7 +23,14 @@ class Cancel():
         # When successful, approve the fulfillment request
 
         # Provide the template id configured as Activation template. This template has the message for the customer that the subscription is terminated.
-        payload = {"template_id": Globals.SUBSCRIPTION_APPROVED_TEMPLATE}
+        # Get the template
+        product = get_value(request, 'asset', 'product')
+        product_id = get_basic_value(product, 'id')
+        template = client.collection('products')[product_id].templates.filter(name=('Default Activation Template'),
+                                                                              scope=('asset')).first()
+        # Customize: Change the template name to match with the name configured in Product in Connect
+        template_id = get_basic_value(template, 'id')
+        payload1 = {"template_id": template_id}
         request_id = get_basic_value(request, 'id')
         result = Cancel.approve_request(request_id, payload, client)
         return result
