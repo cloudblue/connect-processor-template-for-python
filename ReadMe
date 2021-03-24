@@ -1,8 +1,11 @@
-Connect Processor SDK Template in Python
+Connect Processor Template in Python
 
-The Connect Processor SDK Template for Python provides developers an complete skeleton to start their automation project using the Connect Fulfillment API together with the Connect Processor SDK for Python.
+The Connect Processor Template for Python provides developers an complete skeleton to start their automation project using the Connect Open API Client.
 
-In order to use this library, please ensure that you have read first the documentation available on Connect knowledge base article located here, this one will provide you a great information on the Processor that should automate the provisioning of subscription requests in Connect.
+In order to use this library, please ensure that you have read first the documentation available on Connect knowledge base article located here.
+This documentation is exclussive and comprehensive that will provide information on the Connect Processor Template. 
+The Connect Processor built from this Template should automate the provisioning of subscription requests in Connect.
+
 Requirements
 
 In order to use this template you will need an environment capable to run Python scripts, Python 3.6 is supported.
@@ -35,14 +38,50 @@ $ . venv/bin/activate
 $ pip install -r requirements/test.txt
 
 
-4. Create a Virtual Environment inside the connector folder <processor application folder name> by running the following command:
+4. Powered by Cookiecutter, Cookiecutter for CloudBlue Connect Processor provides a framework for bootstrapping your custom processor for Connect.
+With this project, you can write your own processor that is capable of processing the requests in Connect for use-cases like purchase/change/suspend/resume/cancel subscription requests along with usage reporting for Pay-as-you-go items and dynamic validation.
+First of all, install in your local machine Cookiecutter, for example, you can do it using pip:
+
+$ pip install cookiecutter
+
+Once cookiecutter is installed you can instantiate it against this repository:
+
+$ cookiecutter https://github.com/cloudblue/connect-processor-template-for-python
+
+You'll be prompted for some values. Provide them and a Connect project will be created for you.
+
+Warning: Please change sample data with your own desired information
+
+project_name [My Awesome Project]: My Awesome Processor
+project_slug [my_awesome_project]:
+description [My reports are really usefull!]:
+author: CloudBlue Vendor,
+version: 0.1.0,
+	license: [
+  	  "Apache Software License 2.0",
+ 	   "MIT",
+   "BSD” ],
+Require_subscription_change_usecase: "y/n",
+Require_subscription_cancel_usecase: "y/n",
+Require_subscription_suspend_and_resume_usecase: "y/n"
+Require usage reporting for Pay-as-you-go usecase: "y/n"
+Require dynamic validation of ordering parameters for subscription: "y/n"
+Require reseller/customer information for provisioning: "y/n	
+Done! Your project is ready to go!
+
+Now you can access your recently created project folder and take a look around it:
+
+$ cd my_awesome_report
+$ ls
+
+
+5. Create a Virtual Environment inside the connector folder <processor application folder name> by running the following command:
 cd /usr/processor/<processor application folder name>.
 scl enable rh-python36 bash
 python -m venv venv
 source venv/bin/activate
 
-
-5. Run this command to install the package requirements:
+Run this command to install the package requirements:
 venv/bin/pip install -r requirements.txt
 
 
