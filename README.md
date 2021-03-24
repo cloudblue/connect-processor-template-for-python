@@ -97,5 +97,7 @@ $ python -m unittest launcher.py
 7. Set up the configurations
 
 Provide Connect API end point and token in config.json
+
 Provide Product Id from Connect in Globals.py
-Refer - 2. Configurations
+
+Refer - 2. Configurations from Documentation
