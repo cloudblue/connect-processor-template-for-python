@@ -28,9 +28,26 @@ class TestUsage(unittest.TestCase):
                    }
                ]
            }))
+    @patch('connect_processor.app.report_usage.Usage._get_contracts',
+           MagicMock(return_value={
+               "contracts": [
+                   {
+                       "id": "CRD-00000-00000-00000"
+                   }
+               ]
+           }))
+    @patch('connect_processor.app.report_usage.Usage._get_subscriptions',
+           MagicMock(return_value=TestUtils.get_response("usage_records_response.json")))
+    @patch('connect_processor.app.report_usage.Usage._validate_ppu_schema', MagicMock(return_value=True))
+    @patch('connect_processor.app.report_usage.Usage._create_usage', MagicMock(return_value=True))
     def test_report_usage_pass(self):
-        with self.assertRaises(ValueError):
-            Usage(client).process_usage()
+        Usage(client).process_usage()
+        test_config_file = TestUtils.get_config_file()
+        usage_path = test_config_file['rootPathUsage']
+        if os.path.exists(usage_path):
+            files = [f for f in os.listdir(usage_path) if f.endswith(".xlsx")]
+            for f in files:
+                os.remove(os.path.join(usage_path, f))
 
     def test_create_excel_file(self):
         usage_data = UsageData()
@@ -44,3 +61,4 @@ class TestUsage(unittest.TestCase):
         path = Usage.UsageFileExcelCreator().create_usage_excel(record_data)
         self.assertTrue(os.path.exists(path))
         os.remove(path)
+
