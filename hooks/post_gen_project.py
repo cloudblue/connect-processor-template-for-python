@@ -12,17 +12,13 @@ import pathlib
 PROJECT_DIRECTORY = os.path.realpath(os.path.curdir)
 
 
-def remove_license():
-    os.remove('LICENSE')
-
 
 def remove_file(filepath):
     os.remove(os.path.join(PROJECT_DIRECTORY, filepath))
 
 
 def main():
-    if '{{ cookiecutter.license }}' == 'Other, not Open-source':
-        remove_license()
+
 
     if '{{ cookiecutter.Require_subscription_change_usecase }}'.lower() == 'n':
         c_file = os.path.join('connect_processor', 'app', 'change.py')
@@ -64,7 +60,7 @@ def main():
         c_file = os.path.join('tests', 'test_tier_fulfillment.py')
         remove_file(c_file)
 
-    print('Done! Your report project is ready to go!')
+    print('Done! Your Connect Processor project is ready to go!')
 
 
 if __name__ == '__main__':

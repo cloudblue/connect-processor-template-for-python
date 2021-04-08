@@ -13,8 +13,8 @@ class Purchase():
         # Customize: implement the Vendor API call to create the subscription in Vendor portal
 
         # The following is the Mock API and client to create subscription
-        # api_client = APIClient(api_url='https://api.conn.rocks/public/v1',
-        #                        api_key='ApiKey SU-265-300-494:bec18741a853297bb267b5a4839bd37e72357d89')
+        # api_client = APIClient(api_url='',
+        #                        api_key='')
         # data = {}
         # subscription_info = api_client.create_subscription(data=data)
 
