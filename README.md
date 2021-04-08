@@ -52,15 +52,10 @@ You'll be prompted for some values. Provide them and a Connect project will be c
 
 Warning: Please change sample data with your own desired information
 
-project_name [My Awesome Project]: My Awesome Processor
-project_slug [my_awesome_project]:
-description [My reports are really usefull!]:
+project_name [My Connect Processor]: My Awesome Processor
+project_slug [my_connect_processor]:
+description [My processor will auto-process subscription requests in CloudBlue Connect]:
 author: CloudBlue Vendor,
-version: 0.1.0,
-	license: [
-  	  "Apache Software License 2.0",
- 	   "MIT",
-   "BSD” ],
 Require_subscription_change_usecase [y/n]: y
 Require_subscription_cancel_usecase [y/n]: y
 Require_subscription_suspend_and_resume_usecases [y/n]: y
@@ -71,7 +66,7 @@ Done! Your project is ready to go!
 
 Now you can access your recently created project folder and take a look around it:
 
-$ cd my_awesome_report
+$ cd my_connect_processor
 $ ls
 
 
