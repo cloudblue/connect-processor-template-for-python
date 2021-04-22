@@ -1,4 +1,4 @@
-from connect_processor.app.utils.utils import Utils, get_basic_value
+from connect_processor.app.utils.utils import Utils
 from connect_processor.app.utils.globals import Globals
 
 class Resume():
@@ -9,20 +9,30 @@ class Resume():
         # Type RESUME means, it is a resume request of an existing suspended subscription in Connect
 
         # Get the subscription Id from the request that needs to be resumed
-        params = get_basic_value('asset', 'params')
+        params = Utils.get_basic_value('asset', 'params')
         for param in params:
-            param_type = get_basic_value(param, 'phase')
-            # Here, the 'subscriptionId' is the id of fulfillment parameter
-            if param_type == 'fulfillment' and get_basic_value(param, 'name') == 'subscriptionId':
-                external_subscription_id = get_basic_value(param, 'value')
+            param_type = Utils.get_basic_value(param, 'phase')
+            # The 'param_a' is the id of fulfillment parameter
+            # Saving the Subscription ID from Vendor system is encouraged to be able to map the subscription in Connect with the subscription in Vendor system
+            # The Subscription ID can be saved in a fulfillment parameter
+            if param_type == 'fulfillment' and Utils.get_basic_value(param, 'name') == 'param_a':
+                external_subscription_id = Utils.get_basic_value(param, 'value')
                 # This external_subscription_id from Vendor platform might be required to call the Vendor API to resume the suspended subscription
 
-        # Resume the subscription in vendor system by calling the Vendor API to resume the suspended subscription
+        # Customize: Add code to Resume the subscription in vendor system by calling the Vendor API to resume the suspended subscription
         # When successful, approve the fulfillment request
 
         # Provide the template id configured as Activation template. This template has the message for the customer that the subscription is resumed.
-        payload = {"template_id": Globals.ACTIVATION_TEMPLATE}
-        result = client.requests[get_basic_value(request, 'id')]('approve').post(payload=payload)
+        # Get the template
+        product = Utils.get_value(request, 'asset', 'product')
+        product_id = Utils.get_basic_value(product, 'id')
+        # Customize: Change the template name to match with the name configured in Product in Connect
+        template_id = Utils.get_template_by_product(product_id, 'Default Activation Template', 'asset', client)
+        payload = {"template_id": template_id}
+        request_id = Utils.get_basic_value(request, 'id')
+        # Approve the fulfillment request with the template
+        result = Utils.approve_fulfillment_request(request_id, payload, client)
+        return result
         # Returning the Activation Template will update the status of Fulfillment Request object to Approved and Subscription object status to Active.
         # The statuses will not get updated as Approved/Active if any of the mandatory/required fulfilment parameter in Fulfillment Request remain empty.
 

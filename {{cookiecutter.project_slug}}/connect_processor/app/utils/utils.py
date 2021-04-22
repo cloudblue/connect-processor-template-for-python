@@ -1,20 +1,7 @@
-from connect.models.configuration import Param, Configuration
-
-from connect.exceptions import SkipRequest, InquireRequest, FailRequest
-from connect.resources.fulfillment import FulfillmentResource
-from connect.config import Config
-from connect_processor.app.utils.message import Message
-from connect_processor.app.utils.globals import Globals
 import json
-from copy import deepcopy
 from typing import Any, Dict
 
 class Utils:
-    # Actions
-    VALIDATE_ACTION = 'validate'
-    CREATE_ACTION = 'creation'
-    CHANGE_ACTION = 'change'
-
 
     @staticmethod
     def get_config_file() -> Dict[str, Any]:
@@ -22,91 +9,63 @@ class Utils:
             config = json.load(file_handle)
         return config
 
-    @staticmethod
-    def serialize(data, restrict=False):
-        """Convert given object to printable structure
-        Args:
-            request: Generic object to be converted in string with json structure
-            :param data: request to be converted
-            :param restrict: hide sensitive request
-        """
-        dumped = json.dumps(data, default=lambda o: getattr(o, '__dict__', str(o)), check_circular=False)
-        return Utils.drop_restricted_data(json.loads(dumped)) if restrict else json.loads(dumped)
 
     @staticmethod
-    def drop_restricted_data(param):
-        params = deepcopy(param)
-        if params and isinstance(params, dict):
-            for param_key in params.keys():
-                if str(param_key).upper() in Globals.RESTRICTED_KEYS:
-                    params[param_key] = "####-###-####"
-                elif params[param_key] and isinstance(params[param_key], dict):
-                    params[param_key] = Utils.drop_restricted_data(params[param_key])
-
-        return params
-
-    @staticmethod
-    def is_null_or_empty(value):
-        return value is None or value == 0 or len(value) == 0
-
-    @staticmethod
-    def get_status_code(info):
-        return info['statusCode'] if 'statusCode' in info else ''
-
-    @staticmethod
-    def get_activation_template(configuration, template_type, marketplace_id):
-        template_id = ""
-
-        try:
-            # Getting the Activation Template provided in configuration parameter of Product in Connect
-            if hasattr(configuration.get_param_by_id(template_type), 'value') and not Utils.is_null_or_empty(
-                    configuration.get_param_by_id(template_type).value):
-                template_id = configuration.get_param_by_id(template_type).value
-            # Activation Template can be configured in config.json file in this Processor for a particular marketplace.
-            # Customize this method accordingly to get the Activation Template ID from the config.json as desired.
-            else:
-                error_message = Message.Shared.NOT_FOUND_TEMPLATE.format(template_type,
-                                                                         marketplace_id)
-                raise SkipRequest(error_message)
-        finally:
-            return template_id
-
-    @staticmethod
-    def is_downsize_request(items):
+    def get_item_by_id(items, item_id) -> object:
         for item in items:
-            if item.old_quantity > item.quantity:
-                return True
-
-        return False
+            if item['id'] == item_id:
+                return item
+        raise Exception('Item {id} not found.'.format(id=item_id))
 
     @staticmethod
-    def check_previous_active_subscription(filter):
-        config_file = Utils.get_config_file()
-        fulfilment_resource = FulfillmentResource(Config(
-            api_url=config_file['apiEndpoint'],
-            api_key=config_file['apiKey'],
-            products=config_file['products']
-        ))
-        return fulfilment_resource.search_asset_request(filter)
+    def get_basic_value(base, value):
+        if base and value in base:
+            return base[value]
+        return '-'
 
-    # for open cli
-def get_basic_value(base, value):
-    if base and value in base:
-        return base[value]
-    return '-'
+    @staticmethod
+    def get_value(base, prop, value):
+        if prop in base:
+            return Utils.get_basic_value(base[prop], value)
+        return '-'
 
-def get_value(base, prop, value):
-    if prop in base:
-        return get_basic_value(base[prop], value)
-    return '-'
+    @staticmethod
+    def update_subscription_parameters(request_id, payload, client):
+        # This will update the value in the parameters in the fulfillment request
+        fulfillment_request = client.requests.resource(request_id).update(payload=payload)
+        return fulfillment_request
 
-# def get_param_by_id(param_id):
-#     """ Get a parameter of the asset.
-#             :param str param_id: Id of the the parameter to get.
-#             :return: The parameter with the given id, or ``None`` if it was not found.
-#             :rtype: :py:class:`.Param` | None
-#             """
-#     try:
-#         return list(filter(lambda param: param.id == param_id, params))[0]
-#     except IndexError:
-#         return None
+    @staticmethod
+    def approve_fulfillment_request(request_id, payload, client):
+        # Approve the fulfillment request. The status of fulfillment request will be updated to Approved.
+        result = client.requests.resource(request_id).approve
+        purchase_result = result.post(payload=payload)
+        return purchase_result
+
+    @staticmethod
+    def get_template_by_product(product_id, template_name, template_scope, client):
+        template = client.collection('products')[product_id].templates.filter(name=(template_name),
+                                                                              scope=(template_scope)).first()
+        template_id = Utils.get_basic_value(template, 'id')
+        return template_id
+
+    def update_Tier1_parameters(tcr_id, payload, client):
+        # This will update the value in the parameters in the fulfillment request
+        tier_request = client.ns('tier').collection('config-requests')[tcr_id].update(payload=payload)
+        return tier_request
+
+    def approve_Tier_config_request(tcr_id, payload, client):
+        # Approve the fulfillment request. The status of tier config request will be updated to Approved.
+        # The status of Tier Config will get updated to Active.
+        # The status of Subscription will get updated to Pending.
+        result = client.ns('tier').collection('config-requests')[tcr_id].approve
+        purchase_result = result.post(payload=payload)
+        return purchase_result
+
+
+
+
+
+
+
+

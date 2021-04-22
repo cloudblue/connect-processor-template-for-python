@@ -1,0 +1,15 @@
+
+  [
+    {
+      "id": "AS-8055-3268-5577",
+      "status": "active",
+      "external_id": "QOOJ78FHEZ",
+      "external_uid": "03b1f9ec-41d9-4c49-98c1-afd07fc7ca10",
+      "product": {
+        "id": "PRD-658-160-426",
+        "icon": "/media/VA-589-589/PRD-658-160-426/media/PRD-658-160-426-logo_vFoiITz.png",
+        "name": "Test product Name",
+        "status": "published"
+      }
+    }
+  ]
