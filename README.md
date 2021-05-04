@@ -84,7 +84,7 @@ Provide Product Ids and other data from your Connect product in Globals.py.
 Please take a look at our official [documentation site](https://connect.cloudblue.com/community/modules/extensions/api-tokens/) for more information.
 
 
-##Running tests
+## Running tests
 
 The Connect Processor Template for Python uses unit tests for unit testing.
 
@@ -93,7 +93,7 @@ To run the entire tests suite, from the tests directory, execute:
     $ python -m unittest launcher.py
 ```
 
-##Example Processor
+## Example Processor
 
 Find in the Examples folder of this project some Connect Processor examples, created from this template, 
 and completely developed with the basic Connect Product Requests use cases.
