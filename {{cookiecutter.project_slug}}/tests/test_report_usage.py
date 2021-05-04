@@ -49,6 +49,9 @@ class TestUsage(unittest.TestCase):
             for f in files:
                 os.remove(os.path.join(usage_path, f))
 
+    @patch('connect_processor.app.utils.utils.Utils.get_config_file', MagicMock(return_value={
+        "rootPathUsage": "./usage"
+    }))
     def test_create_excel_file(self):
         usage_data = UsageData()
         usage_data.record_description = 'Test product Period: TEST'

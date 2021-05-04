@@ -14,15 +14,15 @@ connect_key = config_file['connectApiKey']
 # client = ConnectClient(api_key=connect_key[0], endpoint=connect_api_url[0])
 client = ''
 
+
 class TestChange(unittest.TestCase):
     # //////////////////////
     # CHANGE UNIT TESTS
     # /////////////////////
 
-
     @patch('connect_processor.app.utils.utils.Utils.approve_fulfillment_request',
-            MagicMock(return_value=TestUtils.get_response("purchase_subscription_response.json")))
-    @patch('connect_processor.app.utils.utils.Utils.get_template_by_product',
+           MagicMock(return_value=TestUtils.get_response("purchase_subscription_response.json")))
+    @patch('connect_processor.app.utils.utils.Utils._get_template_by_product',
            MagicMock(return_value="TL-###-###-###"))
     def test_change_pass(self):
         request = TestUtils.get_response("create_purchase_request_body.json")

@@ -1,8 +1,8 @@
-import os
-import pathlib
 import json
+import os
 
-class TestUtils():
+
+class TestUtils:
     @staticmethod
     def get_request(file, model_class):
         with open(os.path.join(os.path.dirname(__file__), file)) as request_file:
@@ -23,6 +23,6 @@ class TestUtils():
 
     @staticmethod
     def get_config_file():
-        with open('./config.json') as file_handle:
+        with open('./tests/config.json') as file_handle:
             config = json.load(file_handle)
         return config
