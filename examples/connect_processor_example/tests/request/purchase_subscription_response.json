@@ -1,0 +1,184 @@
+{
+    "activation_key": "",
+    "answered": false,
+    "asset": {
+        "configuration": {
+            "params": []
+        },
+        "connection": {
+            "hub": {
+                "id": "HB-0000-0000",
+                "name": "None"
+            },
+            "id": "CT-0000-0000-0000",
+            "provider": {
+                "id": "PA-800-926",
+                "name": "IMC Gamma Team Provider"
+            },
+            "type": "preview",
+            "vendor": {
+                "id": "VA-258-273",
+                "name": "Ingram Micro Australia Staging"
+            }
+        },
+        "contract": {
+            "id": "CRD-00000-00000-00000",
+            "name": "None"
+        },
+        "events": {
+            "created": {
+                "at": "2021-03-19T12:21:32+00:00"
+            },
+            "updated": {
+                "at": "2021-03-19T12:30:42+00:00"
+            }
+        },
+        "external_id": "7RJQ6S4TV6",
+        "external_uid": "106f4b5c-b901-4c27-85e6-3420d9012440",
+        "id": "AS-8055-3268-5577",
+        "items": [
+            {
+                "display_name": "Prd 103 781 723 0001",
+                "global_id": "PRD-103-781-723-0001",
+                "id": "PRD_103_781_723_0001",
+                "item_type": "Reservation",
+                "mpn": "MPN-A",
+                "old_quantity": "0",
+                "period": "Monthly",
+                "quantity": "3",
+                "type": "Gb"
+            }
+        ],
+        "marketplace": {
+            "icon": "/media/PA-800-926/marketplaces/MP-78894/icon.png",
+            "id": "MP-78894",
+            "name": "Marketplace EUROPE"
+        },
+        "params": [
+            {
+                "constraints": {
+                    "meta": {},
+                    "reconciliation": false,
+                    "required": true
+                },
+                "description": "Description of the Parameter A",
+                "id": "param_a",
+                "name": "param_a",
+                "phase": "fulfillment",
+                "title": "Title of the Parameter A",
+                "type": "text",
+                "value": "123",
+                "value_error": ""
+            },
+            {
+                "constraints": {
+                    "meta": {},
+                    "reconciliation": false,
+                    "required": true
+                },
+                "description": "Description of the Parameter B",
+                "id": "param_b",
+                "name": "param_b",
+                "phase": "fulfillment",
+                "title": "Title of the Parameter B",
+                "type": "text",
+                "value": "",
+                "value_error": ""
+            },
+            {
+                "constraints": {
+                    "hint": "I am the hint text",
+                    "meta": {},
+                    "placeholder": "Parameter provided at ordering for which we need dynamic validation",
+                    "required": false
+                },
+                "description": "Parameter asked at ordering will be required for provisioning the subscription",
+                "id": "param_dynamic_validation",
+                "name": "param_dynamic_validation",
+                "phase": "ordering",
+                "title": "Parameter asked at ordering that needs dynamic validation",
+                "type": "text",
+                "value": "",
+                "value_error": ""
+            }
+        ],
+        "product": {
+            "icon": "/media/VA-258-273/PRD-103-781-723/media/PRD-103-781-723-logo.png",
+            "id": "PRD-103-781-723",
+            "name": "TestProduct",
+            "status": "draft"
+        },
+        "status": "processing",
+        "tiers": {
+            "customer": {
+                "contact_info": {
+                    "address_line1": "mg road",
+                    "address_line2": "",
+                    "city": "mumbai",
+                    "contact": {
+                        "email": "cust2@cust.com",
+                        "first_name": "cust2fname",
+                        "last_name": "cust2lname",
+                        "phone_number": {
+                            "area_code": "755",
+                            "country_code": "+91",
+                            "extension": "",
+                            "phone_number": "5059167"
+                        }
+                    },
+                    "country": "IN",
+                    "postal_code": "400123",
+                    "state": "mh"
+                },
+                "external_uid": "332211",
+                "id": "TA-7868-4643-1199",
+                "name": "cust2",
+                "type": "customer"
+            },
+            "tier1": {
+                "contact_info": {
+                    "address_line1": "mg road",
+                    "address_line2": "",
+                    "city": "mumbai",
+                    "contact": {
+                        "email": "res2fname@res2.com",
+                        "first_name": "res2fname",
+                        "last_name": "res2lname",
+                        "phone_number": {
+                            "area_code": "755",
+                            "country_code": "+91",
+                            "extension": "",
+                            "phone_number": "5059167"
+                        }
+                    },
+                    "country": "IN",
+                    "postal_code": "400123",
+                    "state": "mh"
+                },
+                "external_uid": "112233",
+                "id": "TA-4559-6820-1704",
+                "name": "Test reseller 2",
+                "type": "reseller"
+            },
+            "tier2": {}
+        }
+    },
+    "assignee": "",
+    "contract": {
+        "id": "CRD-00000-00000-00000",
+        "name": "None"
+    },
+    "created": "2021-03-19T12:21:32+00:00",
+    "external_attributes": {},
+    "id": "PR-8055-3268-5577-001",
+    "marketplace": {
+        "icon": "/media/PA-800-926/marketplaces/MP-78894/icon.png",
+        "id": "MP-78894",
+        "name": "Marketplace EUROPE"
+    },
+    "note": "",
+    "reason": "",
+    "status": "pending",
+    "type": "purchase",
+    "updated": "2021-03-19T12:30:42+00:00"
+}

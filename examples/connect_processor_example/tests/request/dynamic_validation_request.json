@@ -1,0 +1,154 @@
+{
+    "id": "PR-6990-1715-4162-001",
+    "type": "purchase",
+    "note": "",
+    "asset": {
+        "id": "AS-6990-1715-4162",
+        "status": "draft",
+        "external_id": "V8Y72FOAQ3",
+        "external_uid": "a7afd622-9b16-4e8c-9794-a41f9180ca6d",
+        "product": {
+            "id": "PRD-022-202-585",
+            "icon": "/media/VA-258-273/PRD-022-202-585/media/PRD-022-202-585-logo.png",
+            "name": "TestDynamicValidation",
+            "status": "draft"
+        },
+        "connection": {
+            "id": "CT-0000-0000-0000",
+            "provider": {
+                "id": "PA-800-926",
+                "name": "IMC Gamma Team Provider"
+            },
+            "vendor": {
+                "id": "VA-258-273",
+                "name": "Ingram Micro Australia Staging"
+            },
+            "type": "preview",
+            "hub": {
+                "id": "HB-0000-0000",
+                "name": "None"
+            }
+        },
+        "events": {
+            "created": {
+                "at": "2021-03-24T19:34:37+00:00"
+            },
+            "updated": {
+                "at": "2021-03-24T19:41:17+00:00"
+            }
+        },
+        "items": [
+            {
+                "id": "PRD_022_202_585_0001",
+                "global_id": "PRD-022-202-585-0001",
+                "mpn": "MPN-A",
+                "old_quantity": "0",
+                "quantity": "85",
+                "type": "Gb",
+                "display_name": "Prd 022 202 585 0001",
+                "period": "Monthly",
+                "item_type": "Reservation"
+            }
+        ],
+        "params": [
+            {
+                "id": "param_dynamic_validation",
+                "name": "param_dynamic_validation",
+                "type": "text",
+                "phase": "ordering",
+                "description": "param_dynamic_validation",
+                "value": "12345",
+                "value_error": "",
+                "title": "param_dynamic_validation",
+                "constraints": {
+                    "placeholder": "I am the placeholder text",
+                    "hint": "I am the hint text",
+                    "meta": {},
+                    "required": true
+                }
+            }
+        ],
+        "tiers": {
+            "customer": {
+                "id": "TA-7868-4643-1199",
+                "external_uid": "332211",
+                "type": "customer",
+                "name": "cust2",
+                "contact_info": {
+                    "address_line1": "mg road",
+                    "address_line2": "",
+                    "city": "mumbai",
+                    "state": "mh",
+                    "postal_code": "400123",
+                    "country": "IN",
+                    "contact": {
+                        "first_name": "cust2fname",
+                        "last_name": "cust2lname",
+                        "email": "cust2@cust.com",
+                        "phone_number": {
+                            "country_code": "+91",
+                            "area_code": "755",
+                            "phone_number": "5059167",
+                            "extension": ""
+                        }
+                    }
+                }
+            },
+            "tier1": {
+                "id": "TA-4559-6820-1704",
+                "external_uid": "112233",
+                "type": "reseller",
+                "name": "Test reseller 2",
+                "contact_info": {
+                    "address_line1": "mg road",
+                    "address_line2": "",
+                    "city": "mumbai",
+                    "state": "mh",
+                    "postal_code": "400123",
+                    "country": "IN",
+                    "contact": {
+                        "first_name": "res2fname",
+                        "last_name": "res2lname",
+                        "email": "res2fname@res2.com",
+                        "phone_number": {
+                            "country_code": "+91",
+                            "area_code": "755",
+                            "phone_number": "5059167",
+                            "extension": ""
+                        }
+                    }
+                }
+            },
+            "tier2": {}
+        },
+        "configuration": {
+            "params": []
+        },
+        "marketplace": {
+            "id": "MP-78894",
+            "name": "Marketplace EUROPE",
+            "icon": "/media/PA-800-926/marketplaces/MP-78894/icon.png"
+        },
+        "contract": {
+            "id": "CRD-00000-00000-00000",
+            "name": "None"
+        }
+    },
+    "reason": "",
+    "status": "draft",
+    "created": "2021-03-24T19:34:37+00:00",
+    "updated": "2021-03-24T19:41:17+00:00",
+    "answered": false,
+    "assignee": "",
+    "activation_key": "",
+    "external_attributes": {},
+    "marketplace": {
+        "id": "MP-78894",
+        "name": "Marketplace EUROPE",
+        "icon": "/media/PA-800-926/marketplaces/MP-78894/icon.png"
+    },
+    "contract": {
+        "id": "CRD-00000-00000-00000",
+        "name": "None"
+    }
+}

@@ -1,7 +1,10 @@
 import json
 from typing import Any, Dict
 from cnct import ConnectClient
-from connect_processor.app.utils.globals import Globals
+from .globals import Globals
+from .message import Message
+from examples.connect_processor_example.connect_processor.app.api_client.isv_client import APIClient
+from cnct.client.models.resourceset import ResourceSet
 
 
 class Utils:
@@ -132,3 +135,24 @@ class Utils:
         result = client.ns('tier').collection('config-requests')[tcr_id].action(name="approve")
         approve_result = result.post(payload=payload)
         return approve_result
+
+    @staticmethod
+    def get_api_client():
+        config_file = Utils.get_config_file()
+        return APIClient(config_file['mock_vendor']['apiEndpoint'])
+
+    @staticmethod
+    def save_error(client, request_id, error_message):
+        # type: (ConnectClient,str, str) -> Any
+        """ Stores the error message in the Fulfillment Request conversation """
+        conversations = ResourceSet(client, path='conversations', query='instance_id=' + request_id)
+        if conversations.count() > 0:
+            conversation_id = conversations[0]['id']
+            value = error_message
+
+            data = {
+                "text": Message.PROCESSING_REQUEST_ERROR.format(value),
+                "type": "message"
+            }
+            result = client.conversations[conversation_id].action(name="messages")
+            result.post(payload=data)

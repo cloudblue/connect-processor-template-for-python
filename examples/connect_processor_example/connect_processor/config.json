@@ -1,0 +1,9 @@
+{
+  "connectApiEndpoint": "https://api.connect.cloud.im/public/v1",
+  "connectApiKey": "ApiKey SU-000-000-000:000000000000000000000000000000000000",
+  "rootPathUsage": "./usage",
+  "mock_vendor":
+  {
+      "apiEndpoint": "https://private-anon-c209c83563-vendorexample.apiary-mock.com"
+   }
+}
