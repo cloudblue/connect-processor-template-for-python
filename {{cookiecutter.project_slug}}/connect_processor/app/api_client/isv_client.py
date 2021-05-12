@@ -1,4 +1,8 @@
-
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) {% now 'utc', '%Y' %}, {{ cookiecutter.author }}
+# All rights reserved.
+#
 
 class APIClient(object):
     access_token = None
@@ -37,4 +41,3 @@ class APIClient(object):
     def get_usage_records(self, data):
         # TODO: Implement get_usage_records(data) method
         raise NotImplementedError
-

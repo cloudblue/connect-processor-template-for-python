@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) {% now 'utc', '%Y' %}, {{ cookiecutter.author }}
+# All rights reserved.
+#
 from typing import Any
 from openpyxl import Workbook
 from datetime import datetime

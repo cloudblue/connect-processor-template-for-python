@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) {% now 'utc', '%Y' %}, {{ cookiecutter.author }}
+# All rights reserved.
+#
 from cnct import ConnectClient
 from datetime import datetime
 from connect_processor.app.utils.globals import Globals

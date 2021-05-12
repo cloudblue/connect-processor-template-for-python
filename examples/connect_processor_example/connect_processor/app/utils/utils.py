@@ -121,7 +121,7 @@ class Utils:
 
     @staticmethod
     def update_tier1_parameters(tcr_id, payload, client):
-        # type: (str, str, ConnectClient) -> object
+        # type: (str, object, ConnectClient) -> object
         """ Updates the tier1 parameters in the fulfillment request. """
         tier_request = client.ns('tier').collection('config-requests')[tcr_id].update(payload=payload)
         return tier_request

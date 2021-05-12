@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) {% now 'utc', '%Y' %}, {{ cookiecutter.author }}
+# All rights reserved.
+#
 class Globals:
     """ Global Constants.
         It is needed to customize the following:

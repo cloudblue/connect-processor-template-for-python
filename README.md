@@ -88,9 +88,9 @@ Please take a look at our official [documentation site](https://connect.cloudblu
 
 The Connect Processor Template for Python uses unit tests for unit testing.
 
-To run the entire tests suite, from the tests directory, execute:
+To run the entire tests suite, from the connect processor name (my_connect_processor) directory, execute:
 ```
-    $ python -m unittest launcher.py
+    $ python -m unittest discover tests
 ```
 
 ## Example Processor

@@ -17,11 +17,12 @@ class TestSuspend(unittest.TestCase):
            MagicMock(return_value="TL-###-###-###"))
     @patch('examples.connect_processor_example.connect_processor.app.utils.utils.Utils.get_api_client',
            MagicMock(return_value=APIClient('http://example.org/v1')))
-    @patch('examples.connect_processor_example.connect_processor.app.api_client.isv_client.APIClient.suspend_subscription',
-           MagicMock(return_value=''))
+    @patch(
+        'examples.connect_processor_example.connect_processor.app.api_client.isv_client.APIClient.suspend_subscription',
+        MagicMock(return_value=''))
     def test_suspend_pass(self):
         request = TestUtils.get_response("create_purchase_request_body.json")
         response = TestUtils.get_response("purchase_subscription_response.json")
-        client  = ConnectClient('', '')
+        client = ConnectClient('Key', use_specs=False)
         result = Suspend.process_request(request, client)
         self.assertDictEqual(result, response)

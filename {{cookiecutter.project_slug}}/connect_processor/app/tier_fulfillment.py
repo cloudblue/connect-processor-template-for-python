@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) {% now 'utc', '%Y' %}, {{ cookiecutter.author }}
+# All rights reserved.
+#
 from connect_processor.app.utils.utils import Utils
 from cnct import ConnectClient
 from typing import Dict
@@ -38,7 +43,7 @@ class TierConfiguration:
                 "value_error": "",
                 "structured_value": ""}]}
 
-        update_tier_parameter = Utils.update_tier1_parameters(tcr_id, payload)
+        update_tier_parameter = Utils.update_tier1_parameters(tcr_id, payload, client)
 
         # Update the status to Approved
         # The status will not get updated to Approved if any required/mandatory tier parameter is empty

@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) {% now 'utc', '%Y' %}, {{ cookiecutter.author }}
+# All rights reserved.
+#
 from connect_processor.app.utils.utils import Utils
 from cnct import ConnectClient
 from typing import Dict
