@@ -78,22 +78,6 @@ class Utils:
         return Utils._approve_fulfillment_request(request_id, payload, client)
 
     @staticmethod
-    def approve_tier_config_request(request, tcr_id, client):
-        # type: (Dict, str, ConnectClient) -> Dict
-        """ Approves the tier config request with the Client. Its status will be updated to Approved. """
-        # Get the tier config product_id
-        product = Utils.get_value(request, 'configuration', 'product')
-        product_id = Utils.get_basic_value(product, 'id')
-        template_id = Utils._get_template_by_product(product_id, Globals.TIER_CONFIG_ACTIVATION_TEMPLATE_NAME, 'tier1',
-                                                     client)
-        payload = {
-            "template": {
-                "id": template_id
-            }
-        }
-        return Utils._approve_tier_config_request(tcr_id, payload, client)
-
-    @staticmethod
     def _approve_fulfillment_request(request_id, payload, client):
         # type: (str,object,ConnectClient) -> Dict
         result = client.requests[request_id].action(name="approve")
@@ -129,11 +113,34 @@ class Utils:
         return tier_request
 
     @staticmethod
+    def approve_tier_config_request(request, tcr_id, client):
+        # type: (Dict, str, ConnectClient) -> Dict
+        """ Approves the tier config request with the Client. Its status will be updated to Approved. """
+        # Get the tier config product_id
+        product = Utils.get_value(request, 'configuration', 'product')
+        product_id = Utils.get_basic_value(product, 'id')
+        template_id = Utils._get_template_by_product(product_id, Globals.TIER_CONFIG_ACTIVATION_TEMPLATE_NAME, 'tier1',
+                                                     client)
+        payload = {
+            "template": {
+                "id": template_id
+            }
+        }
+        return Utils._approve_tier_config_request(tcr_id, payload, client)
+
+    @staticmethod
     def _approve_tier_config_request(tcr_id, payload, client):
         # type: (str,object, ConnectClient) -> Dict
         """ Approves the Tier Config request. Its status will be updated to Approved.
             The status of Tier Config will get updated to Active.
             The status of Subscription will get updated to Pending. """
-        result = client.ns('tier').collection('config-requests')[tcr_id].action(name="approve")
+        result = client.ns('tier').collection('config-requests')[tcr_id].action(name='approve')
         approve_result = result.post(payload=payload)
         return approve_result
+
+    @staticmethod
+    def set_inquiring_tier_config_request(tcr_id, client):
+        # type: (str, ConnectClient) -> Dict
+        """ Changes to Inquiring status the Tier Config request. Its status will be updated to Inquiring.
+            The status of Tier Config will remain pending """
+        return client.ns('tier').collection('config-requests')[tcr_id].action(name='inquire').post(payload={})

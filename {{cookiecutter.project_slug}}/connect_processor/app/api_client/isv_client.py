@@ -41,3 +41,7 @@ class APIClient(object):
     def get_usage_records(self, data):
         # TODO: Implement get_usage_records(data) method
         raise NotImplementedError
+
+    def check_reseller(self, data):
+        # TODO: Implement check_reseller(data) method
+        raise NotImplementedError

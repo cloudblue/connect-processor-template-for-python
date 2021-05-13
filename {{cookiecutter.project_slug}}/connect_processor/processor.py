@@ -31,11 +31,10 @@ if __name__ == '__main__':
     if hasattr(project_manager, 'tier_fulfillment'):
         # Filter to fetch the Tier-Config-Request (TCR) for this product
         # The processor needs to process only the TCRs in Pending status
-        # TODO: Remove the 'inquiring' status from the filter query. It is added for the ease of debug and unit tests
 
         query_tcr = R()
         query_tcr &= R().configuration.product.id.oneof(Globals.PRODUCTS)
-        query_tcr &= R().status.oneof(['pending', 'inquiring'])
+        query_tcr &= R().status.oneof(['pending'])
         tc_requests = client.ns('tier').collection('config-requests').filter(query_tcr)
         # Process each TCR
         for tcr in tc_requests:
