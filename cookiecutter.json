@@ -1,0 +1,13 @@
+{
+    "project_name": "My Connect Processor",
+    "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_')|replace('.', '_')|trim() }}",
+    "description": "My processor will auto-process subscription requests in CloudBlue Connect",
+    "author": "CloudBlue Vendor",
+    "version": "0.1.0",
+    "Require_subscription_change_usecase": "y/n",
+	"Require_subscription_cancel_usecase": "y/n",
+	"Require_subscription_suspend_and_resume_usecases": "y/n",
+	"Require_usage_reporting_for_Pay_as_you_go_usecase":"y/n",
+	"Require_dynamic_validation_of_ordering_parameters_for_subscription":"y/n",
+	"Require_reseller_information_for_provisioning":"y/n"
+}
