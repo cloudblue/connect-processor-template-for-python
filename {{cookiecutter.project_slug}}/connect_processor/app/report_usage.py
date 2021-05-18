@@ -1,3 +1,8 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) {% now 'utc', '%Y' %}, {{ cookiecutter.author }}
+# All rights reserved.
+#
 from typing import Any
 from openpyxl import Workbook
 from datetime import datetime
@@ -7,6 +12,8 @@ import ntpath
 from connect_processor.app.utils.utils import Utils
 from cnct import ConnectClient
 from cnct import R
+from typing import List
+from decimal import Decimal
 
 
 class Usage:
@@ -98,15 +105,21 @@ class Usage:
     # Loads the usage data from Vendor system calling Vendor API. To be Customized.
     @staticmethod
     def _get_usage_records():
-        # Customize this to call vendor System and load the usage to report for each subscription.
-        # It is need to retrieve the asset.id or the fulfillment parameter configured to indentify the subscription.
-        # Also choose the reporting Schema, for this processor QT to report quantity.
-        # For this sample the "id" is the asset.id.
+        # TODO: Customize this to call vendor System and load the usage to report for each subscription.
+        # Here can be called the Vendor API like with this code
+        # api_client = APIClient(api_url='',
+        #                        api_key='')
+        # usage_payload = {}
+        # api_client.get_usage_records(usage_payload)
+        #
+        # It is need to retrieve the asset.id or the fulfillment parameter used for reconciliation,
+        # like subscription_id. The product Pay-as-you-Go reporting Schema for this processor must be QT,
+        # to report quantity used monthly. For this sample the "id" is the asset.id, subscription Id in Connect.
         usage_data = {
             "subscriptions": [
                 {
                     "id": "AS-####-####-####",
-                    "mpn": "#####",  # The PAYG connect item MPN
+                    "mpn": "#####",  # The Pay-as-you-go Connect item MPN
                     "quantity": 10,  # This sample uses the QT model, use amount for PR
                     "start_date": '2021-02-01 00:00:00',  # Period reported. Format "%Y-%m-%d %H:%M:%S"
                     "end_date": '2021-02-28 00:00:00'
@@ -130,7 +143,7 @@ class Usage:
         # type: (Any, str,  [UsageData]) -> None
         # Add a usage file for a Contract and product
         usage_file_id = self._create_usage_file(contract, product_id)
-        # The Usage file has records with the consumption details about the usage of PAYG items
+        # The Usage file has records with the consumption details about the usage of Pay-as-you-go items
         usage_excel_path = Usage.UsageFileExcelCreator().create_usage_excel(record_data)
         # Upload this usage file in Connect that reports the consumption
         self._upload_usage(usage_file_id, usage_excel_path)
@@ -172,13 +185,13 @@ class Usage:
     def _upload_usage(self, usage_file_id, usage_file_path):
         # type: (str, str) -> None
         # Uploads the Usage Excel file to Connect usage file
-        file_data = open(usage_file_path, 'rb').read()
-        file_name = ntpath.basename(usage_file_path)
 
-        payload = {
-            "usage_file": (file_name, file_data)
-        }
-        self.client.ns('usage').files[usage_file_id].action('upload').post(files=payload)
+        with open(usage_file_path, 'rb').read() as file_data:
+            file_name = ntpath.basename(usage_file_path)
+            payload = {
+                "usage_file": (file_name, file_data)
+            }
+            self.client.ns('usage').files[usage_file_id].action('upload').post(files=payload)
 
     def _submit_usage(self, usage_file_id):
         # type: (str) -> None
@@ -331,10 +344,10 @@ class UsageData:
     item_mpn = None  # type: str
     """ (str) Usage record item MPN """
     # Quantity to report
-    quantity = 1  # type: decimal
+    quantity = 1  # type: Decimal
     """ (decimal) Usage record quantity """
     # Amount, price to report
-    amount = 1  # type: decimal
+    amount = 1  # type: Decimal
     """ (decimal) Usage record amount """
     start_time_utc = None  # type: datetime
     """ (datetime) Date from """

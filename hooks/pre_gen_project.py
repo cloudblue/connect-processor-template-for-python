@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# This file is part of the Ingram Micro Cloud Blue Connect Processor Template Python Boilerplate.
-# Copyright (c) 2019-2020 Ingram Micro. All Rights Reserved.
+# This file is part of the Ingram Micro Cloud Blue Connect Processor Template for Python Boilerplate.
+# Copyright (c) 2021 Ingram Micro. All Rights Reserved.
 
 
 project_slug = '{{ cookiecutter.project_slug }}'

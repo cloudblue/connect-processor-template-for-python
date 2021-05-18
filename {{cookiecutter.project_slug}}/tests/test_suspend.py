@@ -1,19 +1,16 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) {% now 'utc', '%Y' %}, {{ cookiecutter.author }}
+# All rights reserved.
+#
 import unittest
-
 from cnct import ConnectClient
 from unittest.mock import patch, MagicMock
-from test_util import TestUtils
+from tests.test_util import TestUtils
 from connect_processor.app.suspend import Suspend
 
+client = ConnectClient('Key', use_specs=False)
 
-config_file = TestUtils.get_config_file()
-# apiEndpoint is the API End-point of Connect
-connect_api_url = config_file['connectApiEndpoint']
-# apiKey is the API key for authorization created in Integrations menu of Connect
-connect_key = config_file['connectApiKey']
-# products are the list of IDs of the products which needs to be processed by this Processor
-# client = ConnectClient(api_key=connect_key[0], endpoint=connect_api_url[0])
-client = ''
 
 class TestSuspend(unittest.TestCase):
     # //////////////////////
@@ -22,7 +19,7 @@ class TestSuspend(unittest.TestCase):
 
     @patch('connect_processor.app.utils.utils.Utils.approve_fulfillment_request',
            MagicMock(return_value=TestUtils.get_response("purchase_subscription_response.json")))
-    @patch('connect_processor.app.utils.utils.Utils.get_template_by_product',
+    @patch('connect_processor.app.utils.utils.Utils._get_template_by_product',
            MagicMock(return_value="TL-###-###-###"))
     def test_suspend_pass(self):
         request = TestUtils.get_response("create_purchase_request_body.json")

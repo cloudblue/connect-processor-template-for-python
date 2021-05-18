@@ -1,17 +1,16 @@
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) {% now 'utc', '%Y' %}, {{ cookiecutter.author }}
+# All rights reserved.
+#
 import unittest
 import os
 from cnct import ConnectClient
 from connect_processor.app.report_usage import Usage, UsageData
 from unittest.mock import patch, MagicMock
-from test_util import TestUtils
+from tests.test_util import TestUtils
 
-config_file = TestUtils.get_config_file()
-# apiEndpoint is the API End-point of Connect
-connect_api_url = config_file['connectApiEndpoint']
-# apiKey is the API key for authorization created in Integrations menu of Connect
-connect_key = config_file['connectApiKey']
-# products are the list of IDs of the products which needs to be processed by this Processor
-client = ConnectClient(api_key=connect_key, endpoint=connect_api_url)
+client = ConnectClient('Key', use_specs=False)
 
 
 class TestUsage(unittest.TestCase):
@@ -49,6 +48,9 @@ class TestUsage(unittest.TestCase):
             for f in files:
                 os.remove(os.path.join(usage_path, f))
 
+    @patch('connect_processor.app.utils.utils.Utils.get_config_file', MagicMock(return_value={
+        "rootPathUsage": "./usage"
+    }))
     def test_create_excel_file(self):
         usage_data = UsageData()
         usage_data.record_description = 'Test product Period: TEST'
@@ -61,4 +63,3 @@ class TestUsage(unittest.TestCase):
         path = Usage.UsageFileExcelCreator().create_usage_excel(record_data)
         self.assertTrue(os.path.exists(path))
         os.remove(path)
-
