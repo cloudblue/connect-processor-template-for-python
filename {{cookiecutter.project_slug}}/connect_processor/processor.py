@@ -34,6 +34,7 @@ if __name__ == '__main__':
 
         query_tcr = R()
         query_tcr &= R().configuration.product.id.oneof(Globals.PRODUCTS)
+        query_tcr &= R().configuration.connection.type.oneof(Globals.ENVIRONMENT)
         query_tcr &= R().status.oneof(['pending'])
         tc_requests = client.ns('tier').collection('config-requests').filter(query_tcr)
         # Process each TCR
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     # Filter to fetch all the subscription Fulfillment requests from Connect that need to be processed by this Processor
     query = R()
     query &= R().asset.product.id.oneof(Globals.PRODUCTS)
-    query &= R().asset.connectiontype.oneof(Globals.ENVIRONMENT)
+    query &= R().asset.connection.type.oneof(Globals.ENVIRONMENT)
     query &= R().status.oneof(['pending'])
 
     # Applying the filter
