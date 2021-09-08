@@ -56,14 +56,14 @@ class Purchase:
                         "id": "subscription_id",
                         "value": "value for subscription ID in Vendor System",
                         "value_error": "",
-                        "structured_value": ""
+                        "structured_value": {}
                     },
                     {
                         # TODO: Change and/or add the fulfillment parameters id, as configured in product in Connect
                         "id": "param_b",
                         "value": "value for parameter b",
                         "value_error": "",
-                        "structured_value": ""
+                        "structured_value": {}
                     }
                 ]
             }
