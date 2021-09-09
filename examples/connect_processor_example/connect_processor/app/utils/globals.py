@@ -11,7 +11,7 @@ class Globals:
     """
 
     PRODUCTS = ['PRD-411-678-887']
-    ENVIRONMENT = 'preview'
+    ENVIRONMENT = ['preview']
     DAY_TO_REPORT_USAGE = 0
 
     ACTIVATION_TEMPLATE_NAME = 'Default Activation Template'
