@@ -62,6 +62,6 @@ def do_validate():
         response = json.dumps(json_data)
         return api.response_class(
             response=response,
-            status=400,
+            status=200,
             mimetype='application/json'
         )
