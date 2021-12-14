@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-#
-# Copyright (c) 2021, Carolina Giménez Escalante
-# All rights reserved.
-#
 from connect.eaas.extension import (
     Extension,
     ProcessingResponse
