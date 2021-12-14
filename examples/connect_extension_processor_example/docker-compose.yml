@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  connect_extension_processor_example_dev:
+    container_name: connect_extension_processor_example_dev
+    image: cloudblueconnect/connect-extension-runner:latest
+    command: cextrun -d
+    volumes: 
+      - .:/extension
+    env_file:
+      - .connect_extension_processor_example_dev.env
+
