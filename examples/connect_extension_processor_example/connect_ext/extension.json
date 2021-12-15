@@ -1,0 +1,64 @@
+{
+  "name": "ConnectExtensionProcessorExampleExtension",
+  "description": "Extension as a Service Processor Example using a Mock API Endpoint",
+  "version": "1.0.0",
+  "readme_url": "https://github.com/cloudblue/connect-processor-template-for-python/tree/main/examples/connect_extension_processor_example/blob/master/README.md",
+  "changelog_url": "https://github.com/cloudblue/connect-processor-template-for-python/tree/main/examples/connect_extension_processor_example/blob/master/CHANGELOG.md",
+  "capabilities": {
+    "asset_purchase_request_processing": [
+      "draft",
+      "tiers_setup",
+      "pending",
+      "inquiring",
+      "approved",
+      "failed",
+      "scheduled",
+      "revoking",
+      "revoked"
+    ],
+    "asset_change_request_processing": [
+      "draft",
+      "tiers_setup",
+      "pending",
+      "inquiring",
+      "approved",
+      "failed",
+      "scheduled",
+      "revoking",
+      "revoked"
+    ],
+    "asset_suspend_request_processing": [
+      "draft",
+      "tiers_setup",
+      "pending",
+      "inquiring",
+      "approved",
+      "failed",
+      "scheduled",
+      "revoking",
+      "revoked"
+    ],
+    "asset_resume_request_processing": [
+      "draft",
+      "tiers_setup",
+      "pending",
+      "inquiring",
+      "approved",
+      "failed",
+      "scheduled",
+      "revoking",
+      "revoked"
+    ],
+    "asset_cancel_request_processing": [
+      "draft",
+      "tiers_setup",
+      "pending",
+      "inquiring",
+      "approved",
+      "failed",
+      "scheduled",
+      "revoking",
+      "revoked"
+    ]
+  }
+}
